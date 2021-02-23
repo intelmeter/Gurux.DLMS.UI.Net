@@ -41,6 +41,7 @@ namespace Gurux.DLMS.UI
     public partial class GXTextDlg : Form
     {
         Type type = null;
+
         /// <summary>
         /// Constructor.
         /// </summary>
