@@ -255,3 +255,6 @@ paket-files/
 
 # Legacy vendored protocol binary; use the pinned NuGet package.
 /development/Gurux.DLMS.dll
+
+# Local migration conversation notes must not be published.
+/[Mm][Ii][Gg][Rr][Aa][Tt][Ii][Oo][Nn]-[Cc][Oo][Nn][Tt][Ee][Xx][Tt].[Tt][Xx][Tt]
