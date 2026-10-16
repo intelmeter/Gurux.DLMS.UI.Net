@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -52,7 +52,21 @@ namespace Gurux.DLMS.UI
         /// <param name="readOnly"></param>
         public GXDLMSSpecialDaysTableDlg(GXDLMSSpecialDay item, bool readOnly)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, "Special day");
+            ModernPresentation.CompactRow(table, IndexLbl.Text, IndexTb);
+            ModernPresentation.CompactRow(table, DateLbl.Text, DateTb);
+            ModernPresentation.CompactRow(table, DayIdLbl.Text, DayIdTb);
+            IndexLbl.Visible = DateLbl.Visible = DayIdLbl.Visible = false;
+            Controls.Add(table);
+            ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            ClientSize = new System.Drawing.Size(600 * DeviceDpi / 96, 270 * DeviceDpi / 96);
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
             Item = item;      
             if (readOnly)
             {
@@ -64,12 +78,21 @@ namespace Gurux.DLMS.UI
         {
             try
             {
-                Item.Index = UInt16.Parse(IndexTb.Text);
-                Item.Date = new GXDate(DateTb.Text);
-                Item.DayId = byte.Parse(DayIdTb.Text);
+                // Removal is confirmation only; never normalize the selected model.
+                if (!IndexTb.ReadOnly)
+                {
+                    ushort index = UInt16.Parse(IndexTb.Text);
+                    GXDate date = new GXDate(DateTb.Text);
+                    byte dayId = byte.Parse(DayIdTb.Text);
+                    Item.Index = index;
+                    Item.Date = date;
+                    Item.DayId = dayId;
+                }
+                DialogResult = DialogResult.OK;
             }
             catch (Exception ex)
             {
+                DialogResult = DialogResult.None;
                 MessageBox.Show(this, ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -77,11 +100,8 @@ namespace Gurux.DLMS.UI
         private void GXDLMSSpecialDaysTableDlg_Load(object sender, EventArgs e)
         {
             IndexTb.Text = Item.Index.ToString();
-            if (Item.Date == null)
-            {
-                Item.Date = new GXDate(DateTime.Now);
-            }
-            DateTb.Text = Item.Date.ToFormatString();
+            // Display a default without changing the source until a valid OK.
+            DateTb.Text = (Item.Date ?? new GXDate(DateTime.Now)).ToFormatString();
             DayIdTb.Text = Item.DayId.ToString();
         }
     }

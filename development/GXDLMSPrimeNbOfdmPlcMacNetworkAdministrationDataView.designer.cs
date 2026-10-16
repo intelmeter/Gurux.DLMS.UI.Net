@@ -38,7 +38,7 @@ namespace Gurux.DLMS.UI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSPrimeNbOfdmPlcMacNetworkAdministrationDataView));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.Tabs = new System.Windows.Forms.TabControl();
+            this.Tabs = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.MulticastView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

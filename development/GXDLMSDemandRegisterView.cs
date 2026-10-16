@@ -51,14 +51,69 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSDemandRegisterView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             foreach (var it in Enum.GetValues(typeof(Unit)))
             {
                 UnitTB.Items.Add(it);
             }
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
+        }
+
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                // Reflow the legacy fixed-position controls into the same compact,
+                // bounded editor surface used by the Register views.
+                var table = ModernPresentation.CompactSurface(this, includeActionColumn: false);
+                Padding = new Padding(8);
+                table.Padding = new Padding(table.Padding.Left, table.Padding.Top, 0, table.Padding.Bottom);
+                AutoScrollMinSize = new System.Drawing.Size(table.MinimumSize.Width, 0);
+                Controls.Add(table);
+                ModernPresentation.Section(table, groupBox1.Text);
+                ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+                ModernPresentation.CompactRow(table, ValueLbl.Text, CAValueTB);
+                ModernPresentation.CompactRow(table, LAValueLbl.Text, LAValueTB);
+                ModernPresentation.CompactRow(table, ScalerLbl.Text, ScalerTB);
+                ModernPresentation.CompactRow(table, UnitLbl.Text, UnitTB);
+                ModernPresentation.CompactRow(table, StatusLbl.Text, StatusTB);
+                ModernPresentation.CompactRow(table, CaptureTimeLbl.Text, CaptureTimeTB);
+                ModernPresentation.CompactRow(table, CurrentStartTimeLbl.Text, CurrentStartTimeTB);
+                ModernPresentation.CompactRow(table, PeriodLbl.Text, PeriodTB);
+                ModernPresentation.CompactRow(table, NoPeriodLbl.Text, NOPeriodTB);
+
+                ModernPresentation.CompactButton(NextPeriodBtn);
+                ModernPresentation.CompactButton(ResetBtn);
+                var actions = new FlowLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    AutoSize = true,
+                    Margin = Padding.Empty,
+                    Padding = Padding.Empty,
+                    WrapContents = true
+                };
+                actions.Controls.Add(NextPeriodBtn);
+                actions.Controls.Add(ResetBtn);
+                ModernPresentation.CompactRow(table, "Actions", actions, height: 48);
+
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -136,6 +191,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get

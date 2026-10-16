@@ -36,7 +36,7 @@ namespace Gurux.DLMS.UI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSAssociationShortNameView));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ObjectsView = new System.Windows.Forms.ListView();
             this.BaseNameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -355,7 +355,7 @@ namespace Gurux.DLMS.UI
         private ToolStripMenuItem addToolStripMenuItem;
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem removeToolStripMenuItem;
-        private TabControl tabControl1;
+        private AssociationTabControl tabControl1;
         private TabPage tabPage1;
         private ListView ObjectsView;
         private ColumnHeader BaseNameHeader;

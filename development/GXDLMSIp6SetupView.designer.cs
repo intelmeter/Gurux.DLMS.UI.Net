@@ -47,7 +47,7 @@ namespace Gurux.DLMS.UI
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.RemoveAddressBtb = new Gurux.DLMS.UI.GXButton();
             this.AddAddressBtn = new Gurux.DLMS.UI.GXButton();
-            this.AddressTab = new System.Windows.Forms.TabControl();
+            this.AddressTab = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.UnicastAddressView = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));

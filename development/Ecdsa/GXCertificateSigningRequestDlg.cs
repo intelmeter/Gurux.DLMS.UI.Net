@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -46,6 +46,8 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// </summary>
         public GXCertificateSigningRequestDlg(byte[] value)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             SystemTitleTb.Text = GXDLMSTranslator.ToHex(value);
         }

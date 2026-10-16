@@ -33,6 +33,7 @@
 //---------------------------------------------------------------------------
 
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -54,14 +55,55 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSExtendedRegisterView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             foreach (var it in Enum.GetValues(typeof(Unit)))
             {
                 UnitTB.Items.Add(it);
             }
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
+        }
+
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                // This view has no inline field actions. Use the full editor column
+                // and slightly tighter horizontal insets to avoid a needless
+                // horizontal scroll bar at the standard object-pane width.
+                var table = ModernPresentation.CompactSurface(this, includeActionColumn: false);
+                Padding = new Padding(8);
+                table.Padding = new Padding(table.Padding.Left, table.Padding.Top, 0, table.Padding.Bottom);
+                AutoScrollMinSize = new Size(table.MinimumSize.Width, 0);
+                Controls.Add(table);
+                ModernPresentation.Section(table, groupBox1.Text);
+                ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+                ModernPresentation.CompactRow(table, ScalerLbl.Text, ScalerTB);
+                ModernPresentation.CompactRow(table, UnitLbl.Text, UnitTB);
+                ModernPresentation.CompactRow(table, StatusLbl.Text, StatusTB);
+                ModernPresentation.CompactRow(table, CaptureTimeLbl.Text, CaptureTimeTB);
+                ModernPresentation.CompactRow(table, ValueLbl.Text, ValueTB, height: 100);
+                ModernPresentation.CompactButton(ResetBtn);
+                var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true };
+                actions.Controls.Add(ResetBtn);
+                ModernPresentation.CompactRow(table, "Action", actions, height: 48);
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -136,6 +178,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
@@ -152,13 +195,13 @@ namespace Gurux.DLMS.UI
             switch (index)
             {
                 case 2:
-                    errorProvider1.SetError(ValueTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(ValueTB, Dirty ? Properties.Resources.ValueChangedTxt : null);
                     break;
                 case 4:
-                    errorProvider1.SetError(StatusTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(StatusTB, Dirty ? Properties.Resources.ValueChangedTxt : null);
                     break;
                 case 5:
-                    errorProvider1.SetError(CaptureTimeTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(CaptureTimeTB, Dirty ? Properties.Resources.ValueChangedTxt : null);
                     break;
                 default:
                     errorProvider1.Clear();

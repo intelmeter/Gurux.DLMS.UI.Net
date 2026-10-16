@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN;
 using Gurux.DLMS.ASN.Enums;
 using System;
 using System.Collections;
@@ -82,6 +82,8 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <param name="systemTitle">If system title is not null this certificate is selected.</param>
         public GXCertificateForm(IGXUpdater updater, string address, string certificateFolder, string title, byte[] systemTitle)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _updater = updater;
             _address = address;
@@ -364,7 +366,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         {
             try
             {
-                Process.Start(CertificateFolder);
+                Process.Start(new System.Diagnostics.ProcessStartInfo(CertificateFolder) { UseShellExecute = true });
             }
             catch (Exception ex)
             {

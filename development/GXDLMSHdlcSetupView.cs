@@ -55,10 +55,46 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSHdlcSetupView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
         }
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                var table = ModernPresentation.CompactSurface(this);
+                Controls.Add(table);
+                ModernPresentation.Section(table, groupBox1.Text);
+                ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+                ModernPresentation.CompactRow(table, SpeedLbl.Text, SpeedTB);
+                ModernPresentation.CompactRow(table, InternalTimeOutLbl.Text, InternalTimeOutLTB);
+                ModernPresentation.CompactRow(table, InactivityTimeoutLbl.Text, InactivityTimeoutTB);
+                ModernPresentation.CompactRow(table, DeviceAddressLbl.Text, DeviceAddressTB);
+                ModernPresentation.Section(table, groupBox2.Text);
+                ModernPresentation.CompactRow(table, TransmitWindowSizeLbl.Text, TransmitWindowSizeTB);
+                ModernPresentation.CompactRow(table, TransmitMaxLengthLbl.Text, TransmitMaxLengthTB);
+                ModernPresentation.Section(table, groupBox3.Text);
+                ModernPresentation.CompactRow(table, ReceiveWindowSizeLbl.Text, ReceiveWindowSizeTB);
+                ModernPresentation.CompactRow(table, ReceiveMaxLengthLbl.Text, ReceiveMaxLengthTB);
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
+
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -96,6 +132,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
@@ -112,28 +149,28 @@ namespace Gurux.DLMS.UI
             switch (index)
             {
                 case 2:
-                    errorProvider1.SetError(SpeedTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(SpeedTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 3:
-                    errorProvider1.SetError(TransmitWindowSizeTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(TransmitWindowSizeTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 4:
-                    errorProvider1.SetError(ReceiveWindowSizeTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(ReceiveWindowSizeTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 5:
-                    errorProvider1.SetError(TransmitMaxLengthTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(TransmitMaxLengthTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 6:
-                    errorProvider1.SetError(ReceiveMaxLengthTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(ReceiveMaxLengthTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 7:
-                    errorProvider1.SetError(InternalTimeOutLTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(InternalTimeOutLTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 8:
-                    errorProvider1.SetError(InactivityTimeoutTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(InactivityTimeoutTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 9:
-                    errorProvider1.SetError(DeviceAddressTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(DeviceAddressTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 default:
                     errorProvider1.Clear();

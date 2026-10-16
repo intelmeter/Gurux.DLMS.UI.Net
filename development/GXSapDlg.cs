@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -61,6 +61,8 @@ namespace Gurux.DLMS.UI
         {
             SapId = id;
             LogicalDeviceName = name;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             if (SapId != 0)
             {

@@ -33,6 +33,9 @@
 //---------------------------------------------------------------------------
 
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Gurux.DLMS.Objects;
@@ -70,6 +73,8 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSAssociationLogicalNameView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             string[] countries = Properties.Resources.Country.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string it in countries)
@@ -93,11 +98,391 @@ namespace Gurux.DLMS.UI
             {
                 AuthenticationMechanismIdCb.Items.Add(it);
             }
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
+        }
+
+        private static int ScaleFor(Control control, int value)
+        {
+            return (int)Math.Round(value * control.DeviceDpi / 96.0);
+        }
+
+        private static void DisposeOrphaned(Control[] controls)
+        {
+            foreach (Control control in controls)
+            {
+                if (control.Parent == null && !control.IsDisposed)
+                {
+                    control.Dispose();
+                }
+            }
+        }
+
+        private TableLayoutPanel CreateTabSurface(TabPage page, out Control[] oldControls, bool actionColumn = false)
+        {
+            oldControls = page.Controls.Cast<Control>().ToArray();
+            page.Controls.Clear();
+            page.Padding = new Padding(8);
+            page.BackColor = Color.White;
+            page.UseVisualStyleBackColor = false;
+            page.AutoScroll = true;
+            var table = new TableLayoutPanel
+            {
+                Name = "AssociationTabContent",
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = actionColumn ? 3 : 2,
+                Padding = new Padding(0, 0, 8, 8),
+                Margin = Padding.Empty,
+                BackColor = Color.White,
+                MinimumSize = new Size(ScaleFor(page, 480), 0),
+                MaximumSize = new Size(ScaleFor(page, 800), 0)
+            };
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, ScaleFor(page, 144)));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            if (actionColumn)
+            {
+                table.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            }
+            page.Controls.Add(table);
+            void FitTableWidth()
+            {
+                int available = Math.Max(1, page.ClientSize.Width - page.Padding.Horizontal - table.Padding.Horizontal);
+                int minimum = Math.Min(ScaleFor(page, 480), available);
+                table.MinimumSize = new Size(minimum, 0);
+                table.MaximumSize = new Size(Math.Max(minimum, available), 0);
+            }
+            page.Resize += (_, _) => FitTableWidth();
+            FitTableWidth();
+            return table;
+        }
+
+        private static void AddFullWidthRow(TableLayoutPanel table, Control control)
+        {
+            int row = table.RowCount++;
+            table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            control.Dock = DockStyle.Fill;
+            control.Margin = Padding.Empty;
+            table.Controls.Add(control, 0, row);
+            table.SetColumnSpan(control, table.ColumnCount);
+        }
+
+        private void ConfigureTabHeaders(TabControl tabs)
+        {
+            tabs.DrawMode = TabDrawMode.OwnerDrawFixed;
+            tabs.SizeMode = TabSizeMode.Fixed;
+            tabs.ItemSize = new Size(ScaleFor(tabs, 86), ScaleFor(tabs, 24));
+            tabs.BackColor = Color.White;
+            tabs.Padding = new Point(2, 3);
+            tabs.ShowToolTips = true;
+            tabPage1.ToolTipText = "Objects";
+            tabPage2.ToolTipText = "General";
+            tabPage3.ToolTipText = tabPage3.Text;
+            tabPage4.ToolTipText = tabPage4.Text;
+            tabPage5.ToolTipText = tabPage5.Text;
+            tabPage6.ToolTipText = "User List";
+            tabPage3.Text = "xDLMS";
+            tabPage4.Text = "App";
+            tabPage5.Text = "Auth";
+            tabPage6.Text = "Users";
+            foreach (TabPage page in tabs.TabPages)
+            {
+                page.BackColor = Color.White;
+                page.UseVisualStyleBackColor = false;
+            }
+        }
+
+        private void BuildListPage(TabPage page, ListView list, params Button[] buttons)
+        {
+            Control[] oldControls = page.Controls.Cast<Control>().ToArray();
+            page.Controls.Clear();
+            page.Padding = new Padding(8);
+            page.BackColor = Color.White;
+            page.UseVisualStyleBackColor = false;
+            page.AutoScroll = false;
+            var layout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 2,
+                Padding = Padding.Empty,
+                Margin = Padding.Empty,
+                BackColor = Color.White
+            };
+            layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            list.Dock = DockStyle.Fill;
+            list.Margin = new Padding(0, 0, 0, 8);
+            list.BorderStyle = BorderStyle.FixedSingle;
+            list.FullRowSelect = true;
+            list.GridLines = true;
+            if (list == ObjectsView)
+            {
+                ClassIdHeader.Width = 100;
+                VersionHeader.Width = 72;
+                LogicalNameHeader.Width = 140;
+                AttributeAccesssHeader.Width = 150;
+                MethodAccessHeader.Width = 150;
+                list.Resize += (_, _) =>
+                {
+                    int available = Math.Max(400, list.ClientSize.Width - SystemInformation.VerticalScrollBarWidth - 4);
+                    int remainder = Math.Max(170, available - ClassIdHeader.Width - VersionHeader.Width - LogicalNameHeader.Width);
+                    AttributeAccesssHeader.Width = remainder / 2;
+                    MethodAccessHeader.Width = remainder - AttributeAccesssHeader.Width;
+                };
+            }
+            else
+            {
+                UserIdCh.Width = 60;
+                UserNameCh.Width = Math.Max(180, list.ClientSize.Width - UserIdCh.Width - SystemInformation.VerticalScrollBarWidth - 4);
+                list.Resize += (_, _) => UserNameCh.Width = Math.Max(180,
+                    list.ClientSize.Width - UserIdCh.Width - SystemInformation.VerticalScrollBarWidth - 4);
+            }
+            layout.Controls.Add(list, 0, 0);
+
+            var footer = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                RowCount = 1,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.White,
+                AutoSize = true
+            };
+            footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            footer.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            footer.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            var left = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = false,
+                Margin = Padding.Empty, Padding = Padding.Empty };
+            var right = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill, AutoSize = true, Margin = Padding.Empty, Padding = Padding.Empty,
+                FlowDirection = FlowDirection.LeftToRight, WrapContents = false
+            };
+            void SizeFooterButton(Button button)
+            {
+                ModernPresentation.CompactButton(button);
+                button.AutoSize = false;
+                button.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                button.Size = new Size(ScaleFor(page, 100), ScaleFor(page, 32));
+                button.MinimumSize = button.MaximumSize = button.Size;
+                button.Margin = new Padding(0, 0, ScaleFor(page, 8), 0);
+            }
+            if (page == tabPage1)
+            {
+                SizeFooterButton(EditBtn);
+                left.Controls.Add(EditBtn);
+            }
+            foreach (Button button in buttons)
+            {
+                SizeFooterButton(button);
+                right.Controls.Add(button);
+            }
+            footer.Controls.Add(left, 0, 0);
+            footer.Controls.Add(right, 1, 0);
+            layout.Controls.Add(footer, 0, 1);
+            page.Controls.Add(layout);
+            DisposeOrphaned(oldControls);
+        }
+
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                AutoScaleMode = AutoScaleMode.Dpi;
+                AutoScroll = false;
+                BackColor = Color.White;
+                ForeColor = ModernPresentation.Ink;
+                Padding = Padding.Empty;
+
+                var root = new TableLayoutPanel
+                {
+                    Name = "AssociationContent",
+                    Dock = DockStyle.Fill,
+                    ColumnCount = 3,
+                    RowCount = 0,
+                    Padding = new Padding(12, 10, 12, 12),
+                    Margin = Padding.Empty,
+                    BackColor = Color.White
+                };
+                var labelColumn = new ColumnStyle(SizeType.Absolute, ScaleFor(this, 144));
+                var valueColumn = new ColumnStyle(SizeType.Absolute, ScaleFor(this, 260));
+                root.ColumnStyles.Add(labelColumn);
+                root.ColumnStyles.Add(valueColumn);
+                root.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+                ModernPresentation.Section(root, groupBox1.Text.Replace("  ", " "));
+                var versionField = new FlowLayoutPanel
+                {
+                    AutoSize = true, WrapContents = false, FlowDirection = FlowDirection.LeftToRight,
+                    Margin = Padding.Empty, Padding = Padding.Empty, Anchor = AnchorStyles.Left | AnchorStyles.Top
+                };
+                VersionLbl.AutoSize = true;
+                VersionLbl.TextAlign = ContentAlignment.MiddleLeft;
+                VersionLbl.Margin = new Padding(0, 9, 8, 0);
+                VersionTb.BorderStyle = BorderStyle.FixedSingle;
+                VersionTb.BackColor = Color.FromArgb(245, 247, 251);
+                VersionTb.ForeColor = ModernPresentation.Ink;
+                VersionTb.Width = ScaleFor(this, 90);
+                VersionTb.Margin = new Padding(0, 4, 0, 4);
+                versionField.Controls.Add(VersionLbl);
+                versionField.Controls.Add(VersionTb);
+                root.SizeChanged += (_, _) =>
+                {
+                    // Keep the version field visible when this editor is hosted in
+                    // a narrow workspace (for example, after moving to a smaller
+                    // monitor). At normal widths retain the original label/value
+                    // proportions; below that, reclaim only the space needed.
+                    int roomForMainColumns = root.ClientSize.Width - root.Padding.Horizontal - versionField.PreferredSize.Width;
+                    int desiredLabel = ScaleFor(this, 144);
+                    int desiredValue = ScaleFor(this, 260);
+                    int minimumLabel = ScaleFor(this, 100);
+                    int minimumValue = ScaleFor(this, 170);
+                    if (roomForMainColumns < desiredLabel + desiredValue)
+                    {
+                        int reduction = desiredLabel + desiredValue - roomForMainColumns;
+                        int labelReduction = Math.Min(reduction, desiredLabel - minimumLabel);
+                        labelColumn.Width = desiredLabel - labelReduction;
+                        valueColumn.Width = Math.Max(minimumValue, desiredValue - (reduction - labelReduction));
+                    }
+                    else
+                    {
+                        labelColumn.Width = desiredLabel;
+                        valueColumn.Width = desiredValue;
+                    }
+                };
+                ModernPresentation.CompactRow(root, LogicalNameLbl.Text, LogicalNameTB, versionField, height: 40);
+                tabControl1.Dock = DockStyle.Fill;
+                tabControl1.Margin = new Padding(0, 6, 0, 0);
+                ConfigureTabHeaders(tabControl1);
+                int tabRow = root.RowCount++;
+                root.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+                root.Controls.Add(tabControl1, 0, tabRow);
+                root.SetColumnSpan(tabControl1, 3);
+                Controls.Add(root);
+
+                BuildListPage(tabPage1, ObjectsView, AddObjectBtn, RemoveObjectBtn);
+                BuildGeneralPage();
+                BuildContextPage();
+                BuildApplicationContextPage();
+                BuildAuthenticationPage();
+                BuildListPage(tabPage6, UsersList, AddUserBtn, RemoveUserBtn);
+
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
+        }
+
+        private void BuildGeneralPage()
+        {
+            var table = CreateTabSurface(tabPage2, out Control[] oldControls, actionColumn: true);
+            ModernPresentation.Section(table, groupBox2.Text.Replace("  ", " "));
+            ModernPresentation.CompactRow(table, ClientSAPLbl.Text, ClientSAPTb);
+            ModernPresentation.CompactRow(table, ServerSAPLbl.Text, ServerSAPTb);
+            ModernPresentation.CompactRow(table, SecretLbl.Text, SecretTB, SecretAsciiCb);
+            ModernPresentation.CompactRow(table, label1.Text, gxValueField1);
+            ModernPresentation.Section(table, "Password actions");
+            var passwordActions = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill, AutoSize = true, Margin = Padding.Empty,
+                Padding = Padding.Empty, WrapContents = true
+            };
+            ModernPresentation.CompactButton(UpdatePwBtn);
+            ModernPresentation.CompactButton(UpdateHighPwBtn);
+            passwordActions.Controls.Add(UpdatePwBtn);
+            passwordActions.Controls.Add(UpdateHighPwBtn);
+            ModernPresentation.CompactRow(table, "", passwordActions, height: 48);
+            ModernPresentation.Section(table, "Security");
+            ModernPresentation.CompactRow(table, SecuritySetupReferenceLbl.Text, SecuritySetupCb);
+            groupBox2.Dispose();
+            DisposeOrphaned(oldControls);
+        }
+
+        private void BuildContextPage()
+        {
+            var table = CreateTabSurface(tabPage3, out Control[] oldControls);
+            ModernPresentation.Section(table, ConformanceLbl.Text.TrimEnd(':'));
+            var checks = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 3, RowCount = 6, Margin = Padding.Empty, Padding = Padding.Empty,
+                BackColor = Color.White
+            };
+            for (int i = 0; i < 3; ++i)
+            {
+                checks.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f / 3));
+            }
+            for (int i = 0; i < 6; ++i)
+            {
+                checks.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            }
+            CheckBox[] flags =
+            {
+                ActionCB, GeneralProtectionCB, EventNotificationCB, GeneralBlockTransferCB,
+                SelectiveAccessCB, Attribute0GetReferencingCB, GetCB, Attribute0SetReferencingCB,
+                SetCB, PriorityManagementCB, AccessCB, GetBlockTransferCB, DataNotificationCB,
+                SetBlockTransferCB, MultipleReferencesCB, ActionBlockTransferCB, DeltaValueEncodingCb
+            };
+            for (int i = 0; i < flags.Length; ++i)
+            {
+                flags[i].Margin = new Padding(0, 3, 12, 3);
+                checks.Controls.Add(flags[i], i % 3, i / 3);
+            }
+            LNSettings.Controls.Clear();
+            LNSettings.Dispose();
+            AddFullWidthRow(table, checks);
+            ModernPresentation.Section(table, "Context parameters");
+            ModernPresentation.CompactRow(table, MaxReceivePDUSizeLbl.Text, MaxReceivePDUSizeTb);
+            ModernPresentation.CompactRow(table, MaxSendPDUSizeLbl.Text, MaxSendPDUSizeTb);
+            ModernPresentation.CompactRow(table, DLMSVersionNumberLbl.Text, DLMSVersionNumberTB);
+            ModernPresentation.CompactRow(table, CypheringInfoLbl.Text, CypheringInfoTb);
+            DisposeOrphaned(oldControls);
+        }
+
+        private void BuildApplicationContextPage()
+        {
+            var table = CreateTabSurface(tabPage4, out Control[] oldControls);
+            ModernPresentation.Section(table, "Application context identifier");
+            ModernPresentation.CompactRow(table, ApplicationRegistrationAuthorityLbl.Text, ApplicationRegistrationAuthorityCb);
+            ModernPresentation.CompactRow(table, ApplicationJointISOCTTLbl.Text, ApplicationJointISOCTTTb);
+            ModernPresentation.CompactRow(table, ApplicationCountryLbl.Text, ApplicationCountryTb);
+            ModernPresentation.CompactRow(table, ApplicationCountryNameLbl.Text, ApplicationCountryNameTb);
+            ModernPresentation.CompactRow(table, ApplicationIdentifiedOrganizationLbl.Text, ApplicationIdentifiedOrganizationTb);
+            ModernPresentation.CompactRow(table, ApplicationDLMSUALbl.Text, ApplicationDLMSUATb);
+            ModernPresentation.CompactRow(table, ApplicationContextLbl.Text, ApplicationContextTb);
+            ModernPresentation.CompactRow(table, ApplicationContextIDLbl.Text, ApplicationContextIDCb);
+            DisposeOrphaned(oldControls);
+        }
+
+        private void BuildAuthenticationPage()
+        {
+            var table = CreateTabSurface(tabPage5, out Control[] oldControls);
+            ModernPresentation.Section(table, "Authentication mechanism identifier");
+            ModernPresentation.CompactRow(table, AuthenticationRegistrationAuthorityLbl.Text, AuthenticationRegistrationAuthorityCb);
+            ModernPresentation.CompactRow(table, AuthenticationJointISOCTTLbl.Text, AuthenticationJointISOCTTTb);
+            ModernPresentation.CompactRow(table, AuthenticationCountryLbl.Text, AuthenticationCountryTb);
+            ModernPresentation.CompactRow(table, AuthenticationCountryNameLbl.Text, AuthenticationCountryNameTb);
+            ModernPresentation.CompactRow(table, AuthenticationIdentifiedorganizationLbl.Text, AuthenticationIdentifiedorganizationTb);
+            ModernPresentation.CompactRow(table, AuthenticationDLMSUALbl.Text, AuthenticationDLMSUATb);
+            ModernPresentation.CompactRow(table, AuthenticationMechanismNameLbl.Text, AuthenticationMechanismNameTb);
+            ModernPresentation.CompactRow(table, AuthenticationMechanismIdLbl.Text, AuthenticationMechanismIdCb);
+            DisposeOrphaned(oldControls);
         }
 
         #region IGXDLMSView Members
 
         GXDLMSObject _target;
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get
@@ -654,6 +1039,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
@@ -940,6 +1326,151 @@ namespace Gurux.DLMS.UI
                 {
                     MessageBox.Show(this, ex.Message);
                 }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Draws the Association Logical Name editor tabs in the same rounded style as
+    /// the Director workspace, while keeping WinForms tab selection and keyboard
+    /// behavior. DPI updates change native metrics in place to avoid recreating the
+    /// tab HWND and cascading a second layout pass through every page.
+    /// </summary>
+    internal sealed class AssociationTabControl : TabControl
+    {
+        private int hovered = -1;
+        private readonly bool compact;
+
+        internal AssociationTabControl() : this(false) { }
+
+        internal AssociationTabControl(bool compact)
+        {
+            this.compact = compact;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, !SystemInformation.HighContrast);
+            DrawMode = SystemInformation.HighContrast ? TabDrawMode.Normal : TabDrawMode.OwnerDrawFixed;
+            SizeMode = TabSizeMode.Fixed;
+            Padding = new Point(2, 3);
+            ItemSize = new Size(86, 24);
+        }
+
+        private void UpdateMetrics()
+        {
+            int width = compact
+                ? Math.Min((int)Math.Round(220 * DeviceDpi / 96f),
+                    Math.Max((int)Math.Round(80 * DeviceDpi / 96f),
+                        TabPages.Cast<TabPage>().Select(page => TextRenderer.MeasureText(page.Text, Font).Width)
+                            .DefaultIfEmpty(0).Max() + (int)Math.Round(24 * DeviceDpi / 96f)))
+                : (int)Math.Round(86 * DeviceDpi / 96f);
+            int height = (int)Math.Round(24 * DeviceDpi / 96f);
+            int horizontalPadding = (int)Math.Round(2 * DeviceDpi / 96f);
+            int verticalPadding = (int)Math.Round((compact ? 2 : 3) * DeviceDpi / 96f);
+            if (!IsHandleCreated)
+            {
+                Padding = new Point(horizontalPadding, verticalPadding);
+                ItemSize = new Size(width, height);
+            }
+            else
+            {
+                SendMessage(Handle, 0x1329, IntPtr.Zero, (IntPtr)((height << 16) | (width & 0xFFFF))); // TCM_SETITEMSIZE
+                SendMessage(Handle, 0x132B, IntPtr.Zero, (IntPtr)((verticalPadding << 16) | (horizontalPadding & 0xFFFF))); // TCM_SETPADDING
+                base.OnResize(EventArgs.Empty);
+            }
+            Invalidate();
+        }
+
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr window, int message, IntPtr wParam, IntPtr lParam);
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+            UpdateMetrics();
+        }
+
+        protected override void OnDpiChangedAfterParent(EventArgs e)
+        {
+            base.OnDpiChangedAfterParent(e);
+            UpdateMetrics();
+        }
+
+        protected override void OnSystemColorsChanged(EventArgs e)
+        {
+            base.OnSystemColorsChanged(e);
+            bool draw = !SystemInformation.HighContrast;
+            SetStyle(ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, draw);
+            DrawMode = draw ? TabDrawMode.OwnerDrawFixed : TabDrawMode.Normal;
+            UpdateStyles();
+            UpdateMetrics();
+        }
+
+        protected override void OnSelectedIndexChanged(EventArgs e) { base.OnSelectedIndexChanged(e); Invalidate(); }
+        protected override void OnGotFocus(EventArgs e) { base.OnGotFocus(e); Invalidate(); }
+        protected override void OnLostFocus(EventArgs e) { base.OnLostFocus(e); Invalidate(); }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            int next = -1;
+            for (int i = 0; i < TabCount; ++i)
+                if (GetTabRect(i).Contains(e.Location)) { next = i; break; }
+            if (next != hovered) { hovered = next; Invalidate(); }
+        }
+        protected override void OnMouseLeave(EventArgs e) { base.OnMouseLeave(e); hovered = -1; Invalidate(); }
+
+        private GraphicsPath CreateTabOutline(Rectangle rect, int join)
+        {
+            float left = rect.Left;
+            float right = rect.Right - 1;
+            float top = rect.Top;
+            float radius = Math.Min((compact ? 6 : 4) * DeviceDpi / 96f, Math.Min((right - left) / 2, (join - top) / 2));
+            var path = new GraphicsPath();
+            path.AddLine(left, join, left, top + radius);
+            path.AddArc(left, top, radius * 2, radius * 2, 180, 90);
+            path.AddLine(left + radius, top, right - radius, top);
+            path.AddArc(right - radius * 2, top, radius * 2, radius * 2, 270, 90);
+            path.AddLine(right, top + radius, right, join);
+            return path;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            if (SystemInformation.HighContrast) { base.OnPaint(e); return; }
+            Color surface = Color.White;
+            Color chrome = compact ? surface : Color.FromArgb(243, 243, 243);
+            Color line = Color.FromArgb(214, 214, 214);
+            Color accent = Color.FromArgb(0, 122, 204);
+            Color ink = Color.FromArgb(27, 39, 59);
+            e.Graphics.Clear(surface);
+            if (TabCount == 0) return;
+            Rectangle display = DisplayRectangle;
+            int join = Math.Max(GetTabRect(0).Bottom, display.Top) - 1;
+            using (var pen = new Pen(line)) e.Graphics.DrawLine(pen, 0, join, Width, join);
+            for (int i = 0; i < TabCount; ++i)
+            {
+                Rectangle bounds = GetTabRect(i);
+                bounds.Y = 2;
+                bounds.Height = Math.Max(1, join - bounds.Top + 1);
+                if (bounds.Width < 3 || bounds.Height < 3) continue;
+                bool selected = i == SelectedIndex;
+                using var outline = CreateTabOutline(bounds, join);
+                var smoothing = e.Graphics.SmoothingMode;
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                using (var brush = new SolidBrush(i == hovered && !selected ? Color.FromArgb(226, 234, 243) : selected ? surface : chrome))
+                    e.Graphics.FillPath(brush, outline);
+                using (var pen = new Pen(selected ? accent : line)) e.Graphics.DrawPath(pen, outline);
+                if (selected)
+                {
+                    using var surfacePen = new Pen(surface);
+                    e.Graphics.DrawLine(surfacePen, bounds.Left + 1, join, bounds.Right - 2, join);
+                }
+                e.Graphics.SmoothingMode = smoothing;
+                Rectangle text = Rectangle.Inflate(bounds, -(int)Math.Round(3 * DeviceDpi / 96f), -2);
+                TextRenderer.DrawText(e.Graphics, TabPages[i].Text, Font, text, ink,
+                    TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter |
+                    TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
+                if (selected && Focused && ShowFocusCues)
+                    ControlPaint.DrawFocusRectangle(e.Graphics, Rectangle.Inflate(bounds, -3, -3));
             }
         }
     }

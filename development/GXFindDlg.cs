@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -50,6 +50,8 @@ namespace Gurux.DLMS.UI
         public GXFindDlg(GXFindParameters p)
         {
             parameters = p;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             if ((p.Hide & SearchDialogHidden.Obis) != 0)
             {
@@ -72,6 +74,42 @@ namespace Gurux.DLMS.UI
             {
                 FindTb.Text = p.ObisCode;
             }
+            ApplyLayout(p.Hide == SearchDialogHidden.None);
+        }
+
+        private void ApplyLayout(bool showModes)
+        {
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.CompactRow(table, label1.Text, FindTb);
+            label1.Visible = false;
+            // Keep both original radio buttons in one group, including hidden modes.
+            var modes = new FlowLayoutPanel { AutoSize = true, FlowDirection = FlowDirection.TopDown,
+                WrapContents = false, TabIndex = 1 };
+            modes.Controls.Add(LogicalNameRb);
+            modes.Controls.Add(AnyTextRb);
+            LogicalNameRb.TabIndex = 0;
+            AnyTextRb.TabIndex = 1;
+            if (showModes)
+            {
+                ModernPresentation.CompactRow(table, "Search by", modes, height: 64);
+            }
+            else
+            {
+                modes.Visible = false;
+                Controls.Add(modes);
+            }
+            table.TabIndex = 0;
+            Controls.Add(table);
+            var footer = ModernPresentation.DialogFooter(this, FindBtn, CancelBtn);
+            footer.TabIndex = 1;
+            FindBtn.TabIndex = 0;
+            CancelBtn.TabIndex = 1;
+            ClientSize = new System.Drawing.Size((int)(600 * DeviceDpi / 96f),
+                (int)((showModes ? 224 : 160) * DeviceDpi / 96f));
+            ModernPresentation.Apply(this);
+            ActiveControl = FindTb;
+            ResumeLayout(true);
         }
 
         #region Assembly Attribute Accessors
@@ -89,7 +127,7 @@ namespace Gurux.DLMS.UI
                         return titleAttribute.Title;
                     }
                 }
-                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
+                return System.IO.Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().Location);
             }
         }
 
@@ -168,7 +206,6 @@ namespace Gurux.DLMS.UI
                         {
                             throw new Exception("Invalid OBIS code.");
                         }
-                        parameters.ObisCode = tmp[5].ToString() + '.' + tmp[4] + '.' + tmp[3] + '.' + tmp[2] + '.' + tmp[1] + '.' + tmp[0] + '.';
                     }
                     else if (FindTb.Text.Split(new char[] { '.' }).Length != 6)
                     {
@@ -179,12 +216,13 @@ namespace Gurux.DLMS.UI
                 }
                 else
                 {
-                    parameters.ObisCode = null;
-                    parameters.Text = FindTb.Text.Trim();
-                    if (string.IsNullOrEmpty(parameters.Text))
+                    string text = FindTb.Text.Trim();
+                    if (string.IsNullOrEmpty(text))
                     {
                         throw new Exception("Invalid text to search for.");
                     }
+                    parameters.ObisCode = null;
+                    parameters.Text = text;
                 }
             }
             catch (Exception Ex)

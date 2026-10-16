@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -50,6 +50,8 @@ namespace Gurux.DLMS.UI
         {
             action = a;
             targets = objects;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             foreach (DataType it in Enum.GetValues(typeof(DataType)))
             {

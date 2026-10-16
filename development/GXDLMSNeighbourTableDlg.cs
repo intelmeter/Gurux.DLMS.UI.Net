@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.Objects;
+using Gurux.DLMS.Objects;
 using Gurux.DLMS.Objects.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,6 +16,8 @@ namespace Gurux.DLMS.UI
         GXDLMSNeighbourTable Item;
         public GXDLMSNeighbourTableDlg(GXDLMSNeighbourTable item)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             ModulationCb.Items.AddRange(new object[] { Modulation.RobustMode, Modulation.DbPsk, Modulation.DqPsk, Modulation.D8Psk, Modulation.Qam16 });
             TxGainResolutionCb.Items.AddRange(new object[] { GainResolution.dB6, GainResolution.dB3 });

@@ -27,9 +27,9 @@ namespace Gurux.DLMS.UI
         }
 
         #region Windows Form Designer generated code
-        private GroupBox groupBox1;
+        private Panel groupBox1;
         private GXValueField LogicalNameTB;
-        private TabControl tabControl1;
+        private AssociationTabControl tabControl1;
         private TabPage ActiveTab;
         private GXValueField ACalendarNameTB;
         private Label ACalendarNameLbl;
@@ -43,12 +43,12 @@ namespace Gurux.DLMS.UI
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSActivityCalendarView));
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.Panel();
             this.ActivatePassiveCalendarLbl = new System.Windows.Forms.Label();
             this.ActivatePassiveCalendarTb = new Gurux.DLMS.UI.GXValueField();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.ActiveTab = new System.Windows.Forms.TabPage();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabControl2 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.SeasonProfileActiveTab = new System.Windows.Forms.TabPage();
             this.SeasonProfileActiveLV = new System.Windows.Forms.ListView();
             this.NameHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -88,7 +88,7 @@ namespace Gurux.DLMS.UI
             this.ACalendarNameTB = new Gurux.DLMS.UI.GXValueField();
             this.ACalendarNameLbl = new System.Windows.Forms.Label();
             this.PassiveTab = new System.Windows.Forms.TabPage();
-            this.tabControl3 = new System.Windows.Forms.TabControl();
+            this.tabControl3 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.SeasonProfilePassiveTab = new System.Windows.Forms.TabPage();
             this.SeasonProfilePassiveLV = new System.Windows.Forms.ListView();
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -1039,11 +1039,11 @@ namespace Gurux.DLMS.UI
 
         #endregion
 
-        private TabControl tabControl2;
+        private AssociationTabControl tabControl2;
         private TabPage SeasonProfileActiveTab;
         private TabPage WeekProfileActiveTab;
         private TabPage DayProfileActiveTab;
-        private TabControl tabControl3;
+        private AssociationTabControl tabControl3;
         private TabPage SeasonProfilePassiveTab;
         private TabPage WeekProfilePassiveTab;
         private TabPage DayProfilePassiveTab;

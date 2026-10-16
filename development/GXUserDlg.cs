@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -61,6 +61,8 @@ namespace Gurux.DLMS.UI
         {
             UserId = id;
             UserName = name;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             IdTb.Text = id.ToString();
             NameTb.Text = name;

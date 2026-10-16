@@ -34,6 +34,7 @@
 
 using Gurux.DLMS.Enums;
 using Gurux.DLMS.Objects;
+using Gurux.DLMS.Objects.Enums;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -53,10 +54,13 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSIp6SetupView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -248,6 +252,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get

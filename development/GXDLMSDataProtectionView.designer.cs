@@ -41,7 +41,7 @@ namespace Gurux.DLMS.UI
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSDataProtectionView));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.ObjectsTab = new System.Windows.Forms.TabPage();
             this.ObjectsLv = new System.Windows.Forms.ListView();
             this.ObjectTypeHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -81,11 +81,11 @@ namespace Gurux.DLMS.UI
             this.SetParametersTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.groupBox2);
             this.groupBox1.Controls.Add(this.RequiredProtectionLblTb);
@@ -102,11 +102,11 @@ namespace Gurux.DLMS.UI
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Data Protection Object";
-            // 
+            //
             // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.tabControl1);
             this.groupBox2.Location = new System.Drawing.Point(9, 207);
@@ -115,11 +115,11 @@ namespace Gurux.DLMS.UI
             this.groupBox2.TabIndex = 8;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Protection:";
-            // 
+            //
             // tabControl1
-            // 
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.ObjectsTab);
             this.tabControl1.Controls.Add(this.GetParametersTab);
@@ -129,9 +129,9 @@ namespace Gurux.DLMS.UI
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(623, 211);
             this.tabControl1.TabIndex = 9;
-            // 
+            //
             // ObjectsTab
-            // 
+            //
             this.ObjectsTab.Controls.Add(this.ObjectsLv);
             this.ObjectsTab.Location = new System.Drawing.Point(4, 22);
             this.ObjectsTab.Name = "ObjectsTab";
@@ -140,9 +140,9 @@ namespace Gurux.DLMS.UI
             this.ObjectsTab.TabIndex = 0;
             this.ObjectsTab.Text = "Objects";
             this.ObjectsTab.UseVisualStyleBackColor = true;
-            // 
+            //
             // ObjectsLv
-            // 
+            //
             this.ObjectsLv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ObjectTypeHeader,
             this.LogicalNameHeader,
@@ -158,29 +158,29 @@ namespace Gurux.DLMS.UI
             this.ObjectsLv.TabIndex = 26;
             this.ObjectsLv.UseCompatibleStateImageBehavior = false;
             this.ObjectsLv.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // ObjectTypeHeader
-            // 
+            //
             this.ObjectTypeHeader.Text = "Object type:";
             this.ObjectTypeHeader.Width = 105;
-            // 
+            //
             // LogicalNameHeader
-            // 
+            //
             this.LogicalNameHeader.Text = "Logical Name:";
             this.LogicalNameHeader.Width = 106;
-            // 
+            //
             // AttributeHeader
-            // 
+            //
             this.AttributeHeader.Text = "Attribute Index:";
             this.AttributeHeader.Width = 97;
-            // 
+            //
             // dataHeader
-            // 
+            //
             this.dataHeader.Text = "Data index:";
             this.dataHeader.Width = 75;
-            // 
+            //
             // GetParametersTab
-            // 
+            //
             this.GetParametersTab.Controls.Add(this.GetLv);
             this.GetParametersTab.Location = new System.Drawing.Point(4, 22);
             this.GetParametersTab.Name = "GetParametersTab";
@@ -189,9 +189,9 @@ namespace Gurux.DLMS.UI
             this.GetParametersTab.TabIndex = 1;
             this.GetParametersTab.Text = "Get Parameters";
             this.GetParametersTab.UseVisualStyleBackColor = true;
-            // 
+            //
             // GetLv
-            // 
+            //
             this.GetLv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2,
@@ -209,39 +209,39 @@ namespace Gurux.DLMS.UI
             this.GetLv.TabIndex = 27;
             this.GetLv.UseCompatibleStateImageBehavior = false;
             this.GetLv.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Protection Type";
             this.columnHeader1.Width = 93;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Transaction ID";
             this.columnHeader2.Width = 87;
-            // 
+            //
             // columnHeader3
-            // 
+            //
             this.columnHeader3.Text = "Originator System Title";
             this.columnHeader3.Width = 121;
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Recipient System Title";
             this.columnHeader4.Width = 123;
-            // 
+            //
             // columnHeader5
-            // 
+            //
             this.columnHeader5.Text = "Other Information";
             this.columnHeader5.Width = 101;
-            // 
+            //
             // columnHeader6
-            // 
+            //
             this.columnHeader6.Text = "Key Info";
             this.columnHeader6.Width = 70;
-            // 
+            //
             // SetParametersTab
-            // 
+            //
             this.SetParametersTab.Controls.Add(this.SetLv);
             this.SetParametersTab.Location = new System.Drawing.Point(4, 22);
             this.SetParametersTab.Name = "SetParametersTab";
@@ -250,9 +250,9 @@ namespace Gurux.DLMS.UI
             this.SetParametersTab.TabIndex = 2;
             this.SetParametersTab.Text = "Set Parameters";
             this.SetParametersTab.UseVisualStyleBackColor = true;
-            // 
+            //
             // SetLv
-            // 
+            //
             this.SetLv.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader7,
             this.columnHeader8,
@@ -270,120 +270,118 @@ namespace Gurux.DLMS.UI
             this.SetLv.TabIndex = 28;
             this.SetLv.UseCompatibleStateImageBehavior = false;
             this.SetLv.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // columnHeader7
-            // 
+            //
             this.columnHeader7.Text = "Protection Type";
             this.columnHeader7.Width = 93;
-            // 
+            //
             // columnHeader8
-            // 
+            //
             this.columnHeader8.Text = "Transaction ID";
             this.columnHeader8.Width = 87;
-            // 
+            //
             // columnHeader9
-            // 
+            //
             this.columnHeader9.Text = "Originator System Title";
             this.columnHeader9.Width = 121;
-            // 
+            //
             // columnHeader10
-            // 
+            //
             this.columnHeader10.Text = "Recipient System Title";
             this.columnHeader10.Width = 123;
-            // 
+            //
             // columnHeader11
-            // 
+            //
             this.columnHeader11.Text = "Other Information";
             this.columnHeader11.Width = 101;
-            // 
+            //
             // columnHeader12
-            // 
+            //
             this.columnHeader12.Text = "Key Info";
             this.columnHeader12.Width = 70;
-            // 
+            //
             // RequiredProtectionLbl
-            // 
+            //
             this.RequiredProtectionLbl.AutoSize = true;
             this.RequiredProtectionLbl.Location = new System.Drawing.Point(3, 122);
             this.RequiredProtectionLbl.Name = "RequiredProtectionLbl";
             this.RequiredProtectionLbl.Size = new System.Drawing.Size(104, 13);
             this.RequiredProtectionLbl.TabIndex = 7;
             this.RequiredProtectionLbl.Text = "Required Protection:";
-            // 
+            //
             // DescriptionLbl
-            // 
+            //
             this.DescriptionLbl.AutoSize = true;
             this.DescriptionLbl.Location = new System.Drawing.Point(7, 22);
             this.DescriptionLbl.Name = "DescriptionLbl";
             this.DescriptionLbl.Size = new System.Drawing.Size(63, 13);
             this.DescriptionLbl.TabIndex = 5;
             this.DescriptionLbl.Text = "Description:";
-            // 
+            //
             // DescriptionTB
-            // 
-            this.DescriptionTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.DescriptionTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.DescriptionTB.Location = new System.Drawing.Point(112, 19);
             this.DescriptionTB.Name = "DescriptionTB";
             this.DescriptionTB.ReadOnly = true;
             this.DescriptionTB.Size = new System.Drawing.Size(521, 20);
             this.DescriptionTB.TabIndex = 1;
-            // 
+            //
             // ProtectionBufferLbl
-            // 
+            //
             this.ProtectionBufferLbl.AutoSize = true;
             this.ProtectionBufferLbl.Location = new System.Drawing.Point(7, 74);
             this.ProtectionBufferLbl.Name = "ProtectionBufferLbl";
             this.ProtectionBufferLbl.Size = new System.Drawing.Size(89, 13);
             this.ProtectionBufferLbl.TabIndex = 2;
             this.ProtectionBufferLbl.Text = "Protection Buffer:";
-            // 
+            //
             // LogicalNameLbl
-            // 
+            //
             this.LogicalNameLbl.AutoSize = true;
             this.LogicalNameLbl.Location = new System.Drawing.Point(7, 48);
             this.LogicalNameLbl.Name = "LogicalNameLbl";
             this.LogicalNameLbl.Size = new System.Drawing.Size(75, 13);
             this.LogicalNameLbl.TabIndex = 0;
             this.LogicalNameLbl.Text = "Logical Name:";
-            // 
+            //
             // errorProvider1
-            // 
+            //
             this.errorProvider1.BlinkStyle = System.Windows.Forms.ErrorBlinkStyle.NeverBlink;
             this.errorProvider1.ContainerControl = this;
             this.errorProvider1.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider1.Icon")));
-            // 
+            //
             // RequiredProtectionLblTb
-            // 
-            this.RequiredProtectionLblTb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.RequiredProtectionLblTb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.RequiredProtectionLblTb.Index = 6;
-            this.RequiredProtectionLblTb.Location = new System.Drawing.Point(112, 99);
+            this.RequiredProtectionLblTb.Location = new System.Drawing.Point(112, 119);
             this.RequiredProtectionLblTb.Name = "RequiredProtectionLblTb";
             this.RequiredProtectionLblTb.NotifyChanges = false;
-            this.RequiredProtectionLblTb.Size = new System.Drawing.Size(520, 113);
+            this.RequiredProtectionLblTb.Size = new System.Drawing.Size(520, 80);
             this.RequiredProtectionLblTb.TabIndex = 6;
             this.RequiredProtectionLblTb.Type = Gurux.DLMS.Enums.ValueFieldType.CheckedListBox;
-            // 
+            //
             // ProtectionBufferTb
-            // 
-            this.ProtectionBufferTb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.ProtectionBufferTb.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ProtectionBufferTb.Index = 2;
             this.ProtectionBufferTb.Location = new System.Drawing.Point(113, 71);
             this.ProtectionBufferTb.Name = "ProtectionBufferTb";
             this.ProtectionBufferTb.NotifyChanges = false;
-            this.ProtectionBufferTb.Size = new System.Drawing.Size(520, 68);
+            this.ProtectionBufferTb.Size = new System.Drawing.Size(520, 44);
             this.ProtectionBufferTb.TabIndex = 0;
             this.ProtectionBufferTb.Type = Gurux.DLMS.Enums.ValueFieldType.TextBox;
             this.ProtectionBufferTb.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.ValueTB_KeyPress);
             this.ProtectionBufferTb.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ValueTB_KeyUp);
-            // 
+            //
             // LogicalNameTB
-            // 
-            this.LogicalNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.LogicalNameTB.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.LogicalNameTB.Index = 1;
             this.LogicalNameTB.Location = new System.Drawing.Point(112, 45);
@@ -392,9 +390,9 @@ namespace Gurux.DLMS.UI
             this.LogicalNameTB.Size = new System.Drawing.Size(520, 20);
             this.LogicalNameTB.TabIndex = 2;
             this.LogicalNameTB.Type = Gurux.DLMS.Enums.ValueFieldType.TextBox;
-            // 
+            //
             // GXDLMSDataProtectionView
-            // 
+            //
             this.ClientSize = new System.Drawing.Size(669, 467);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

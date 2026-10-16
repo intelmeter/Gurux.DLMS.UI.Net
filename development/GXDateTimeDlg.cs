@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -45,19 +45,40 @@ namespace Gurux.DLMS.UI
 
         public GXDateTimeDlg(GXDateTime startTime, GXDateTime endTime)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             StartTime = startTime;
             EndTime = endTime;
             StartTimeTb.Text = StartTime.ToFormatString();
             EndTimeTb.Text = EndTime.ToFormatString();
+            ApplyLayout(true);
         }
 
         public GXDateTimeDlg(GXDateTime time)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             StartTime = time;
             StartTimeTb.Text = StartTime.ToFormatString();
             EndTimeLbl.Visible = NowEndBtn.Visible = EndTimeTb.Visible = false;
+            ApplyLayout(false);
+        }
+
+        private void ApplyLayout(bool range)
+        {
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, range ? "Time range" : "Date and time");
+            ModernPresentation.CompactRow(table, "Start time", StartTimeTb, NowBtn);
+            if (range) ModernPresentation.CompactRow(table, "End time", EndTimeTb, NowEndBtn);
+            StartTimeLbl.Visible = EndTimeLbl.Visible = false;
+            Controls.Add(table);
+            ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            ClientSize = new System.Drawing.Size((int)(600 * DeviceDpi / 96f), (int)((range ? 220 : 180) * DeviceDpi / 96f));
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
         }
 
         private void NowBtn_Click(object sender, EventArgs e)
@@ -93,8 +114,8 @@ namespace Gurux.DLMS.UI
                 {
                     tmp = new GXDateTime(StartTimeTb.Text);
                 }
-                StartTime.Value = tmp.Value;
-                StartTime.Skip = tmp.Skip;
+                GXDateTime parsedStart = tmp;
+                GXDateTime parsedEnd = null;
                 if (EndTime != null)
                 {
                     if (EndTime is GXDate)
@@ -109,8 +130,14 @@ namespace Gurux.DLMS.UI
                     {
                         tmp = new GXDateTime(EndTimeTb.Text);
                     }
-                    EndTime.Value = tmp.Value;
-                    EndTime.Skip = tmp.Skip;
+                    parsedEnd = tmp;
+                }
+                StartTime.Value = parsedStart.Value;
+                StartTime.Skip = parsedStart.Skip;
+                if (parsedEnd != null)
+                {
+                    EndTime.Value = parsedEnd.Value;
+                    EndTime.Skip = parsedEnd.Skip;
                 }
             }
             catch (Exception ex)

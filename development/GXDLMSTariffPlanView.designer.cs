@@ -37,7 +37,7 @@ namespace Gurux.DLMS.UI
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSTariffPlanView));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.RemoveBtn = new System.Windows.Forms.Button();
             this.AddBtn = new System.Windows.Forms.Button();
@@ -48,7 +48,7 @@ namespace Gurux.DLMS.UI
             this.DefaultTariffBandTb = new System.Windows.Forms.TextBox();
             this.DefaultTariffBandLbl = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.tabControl2 = new System.Windows.Forms.TabControl();
+            this.tabControl2 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage7 = new System.Windows.Forms.TabPage();
             this.WsWdIntervalTariff5Cb = new System.Windows.Forms.ComboBox();
             this.WsWdIntervalCb5 = new System.Windows.Forms.CheckBox();
@@ -130,7 +130,7 @@ namespace Gurux.DLMS.UI
             this.WinterDActivateTb = new System.Windows.Forms.TextBox();
             this.DayOfMonthLbl = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.HolidayTab = new System.Windows.Forms.TabControl();
+            this.HolidayTab = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.SsWdIntervalTariff5Cb = new System.Windows.Forms.ComboBox();
             this.SsWdInterval5Cb = new System.Windows.Forms.CheckBox();

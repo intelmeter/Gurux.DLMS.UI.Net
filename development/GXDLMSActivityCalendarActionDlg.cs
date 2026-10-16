@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -42,6 +42,8 @@ namespace Gurux.DLMS.UI
         GXDLMSDayProfileAction Target;
         public GXDLMSActivityCalendarActionDlg(GXDLMSDayProfileAction target, GXDLMSObjectCollection scripts)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Target = target;
             if (target.StartTime != DateTime.MinValue)

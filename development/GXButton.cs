@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -51,6 +51,7 @@ namespace Gurux.DLMS.UI
         /// <summary>
         /// Action index.
         /// </summary>
+        [System.ComponentModel.DefaultValue(0)]
         public int Index
         {
             get;

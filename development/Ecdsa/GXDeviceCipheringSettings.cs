@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN;
 using Gurux.DLMS.ASN.Enums;
 using Gurux.DLMS.Ecdsa.Enums;
 using Gurux.DLMS.Enums;
@@ -189,6 +189,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Security Security
         {
             get
@@ -200,6 +201,7 @@ namespace Gurux.DLMS.UI.Ecdsa
                 SecurityCB.SelectedItem = value;
             }
         }
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public SecuritySuite SecuritySuite
         {
             get
@@ -216,6 +218,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string SystemTitle
         {
             get
@@ -228,6 +231,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Standard Standard
         {
             get
@@ -240,6 +244,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool SystemTitleAscii
         {
             get
@@ -254,6 +259,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string BlockCipherKey
         {
             get
@@ -266,6 +272,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool BlockCipherKeyAscii
         {
             get
@@ -280,6 +287,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string AuthenticationKey
         {
             get
@@ -292,6 +300,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool AuthenticationKeyAscii
         {
             get
@@ -306,6 +315,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string BroadcastKey
         {
             get
@@ -318,6 +328,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool BroadcastKeyAscii
         {
             get
@@ -333,6 +344,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         }
 
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string DedicatedKey
         {
             get
@@ -345,6 +357,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool DedicatedKeyAscii
         {
             get
@@ -362,6 +375,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Signing.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public Signing Signing
         {
             get
@@ -376,6 +390,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Signing.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool SignInitiateRequestResponse
         {
             get
@@ -392,6 +407,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Signing key of the client.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string ClientSigningKey
         {
             get;
@@ -401,6 +417,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Agreement key of the client.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string ClientAgreementKey
         {
             get;
@@ -410,6 +427,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Signing key of the server.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string ServerSigningKey
         {
             get;
@@ -419,6 +437,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Agreement key of the server.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string ServerAgreementKey
         {
             get;
@@ -428,6 +447,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// Pre-established association is used.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool PreEstablishedApplicationAssociations
         {
             get
@@ -443,6 +463,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         /// <summary>
         /// SNRM message is ignored with pre-established connections.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public bool IgnoreSNRMWithPreEstablished
         {
             get
@@ -456,6 +477,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         }
 
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string ServerSystemTitle
         {
             get
@@ -468,6 +490,7 @@ namespace Gurux.DLMS.UI.Ecdsa
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Challenge
         {
             get
@@ -482,6 +505,8 @@ namespace Gurux.DLMS.UI.Ecdsa
 
         public GXDeviceCipheringSettings(string address, string title, string keysPath, string certificatesPath)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _address = address;
             _title = title;

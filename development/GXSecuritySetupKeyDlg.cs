@@ -42,6 +42,8 @@ namespace Gurux.DLMS.UI
     {
         public GXSecuritySetupKeyDlg(int version)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             GlobalKeyType type = (GlobalKeyType)Properties.Settings.Default.SecurityType;
             foreach (GlobalKeyType it in Enum.GetValues(typeof(GlobalKeyType)))

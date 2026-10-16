@@ -40,7 +40,7 @@ namespace Gurux.DLMS.UI
         private RadioButton ReadFromRB;
         private RadioButton ReadLastRB;
         private RadioButton ReadEntryBtn;
-        private TabControl tabControl1;
+        private AssociationTabControl tabControl1;
         private TabPage tabPage1;
         private DataGridView ProfileGenericView;
         private TabPage tabPage2;
@@ -67,7 +67,7 @@ namespace Gurux.DLMS.UI
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ProfileGenericView = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();

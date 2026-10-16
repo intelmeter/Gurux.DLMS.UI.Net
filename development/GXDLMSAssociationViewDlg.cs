@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -190,6 +190,8 @@ namespace Gurux.DLMS.UI
             {
                 version = sn.Version;
             }
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             CreateAccessrightsColumns(version);
             SortedSet<ObjectType> items = new SortedSet<ObjectType>();

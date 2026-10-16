@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -52,6 +52,8 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXImageDlg(ManufactureSettings settings, GXDLMSClient client)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             IdentificationTb.Text = Properties.Settings.Default.Identification;
             FileNameTb.Text = Properties.Settings.Default.ImageFile;

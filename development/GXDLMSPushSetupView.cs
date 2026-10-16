@@ -54,6 +54,8 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSPushSetupView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             ServiceCB.Items.AddRange(new object[] { ServiceType.Tcp, ServiceType.Udp, ServiceType.Ftp,
                 ServiceType.Smtp, ServiceType.Sms, ServiceType.Hdlc, ServiceType.MBus, ServiceType.ZigBee });
@@ -62,6 +64,7 @@ namespace Gurux.DLMS.UI
 
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -144,6 +147,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get

@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 // 
@@ -54,11 +54,38 @@ namespace Gurux.DLMS.UI
     {
         public GXDLMSMacAddressSetupView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
+        }
+
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                var table = ModernPresentation.CompactSurface(this);
+                Controls.Add(table);
+                ModernPresentation.Section(table, groupBox1.Text);
+                ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+                ModernPresentation.CompactRow(table, MacAddressLbl.Text, MacAddressTB);
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
         }
 
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -95,6 +122,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get

@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -133,6 +133,7 @@ namespace Gurux.DLMS.UI
                         views.Add(att[0].DLMSType, list);
                     }
                     list.Add(view);
+                    ModernPresentation.Apply(f);
                     GXDlmsUi.Init(view, eventHandler);
                 }
             }
@@ -147,7 +148,9 @@ namespace Gurux.DLMS.UI
         /// <returns>Assigned view.</returns>
         public static IGXDLMSView GetView(Dictionary<Type, List<IGXDLMSView>> views, GXDLMSObject target)
         {
-            List<IGXDLMSView> v = views[target.GetType()];
+            List<IGXDLMSView> v;
+            if (!views.TryGetValue(target.GetType(), out v) || v.Count == 0)
+                return views[typeof(GXDLMSObject)][0];
             foreach (var it in v)
             {
                 GXDLMSViewAttribute[] att = (GXDLMSViewAttribute[])it.GetType().GetCustomAttributes(typeof(GXDLMSViewAttribute), true);
@@ -168,7 +171,9 @@ namespace Gurux.DLMS.UI
         /// <returns>Assigned view.</returns>
         public static IGXDLMSView GetView(Dictionary<Type, List<IGXDLMSView>> views, GXDLMSObject target, Standard standard)
         {
-            List<IGXDLMSView> v = views[target.GetType()];
+            List<IGXDLMSView> v;
+            if (!views.TryGetValue(target.GetType(), out v) || v.Count == 0)
+                return views[typeof(GXDLMSObject)][0];
             foreach (var it in v)
             {
                 GXDLMSViewAttribute[] att = (GXDLMSViewAttribute[])it.GetType().GetCustomAttributes(typeof(GXDLMSViewAttribute), true);
@@ -210,7 +215,8 @@ namespace Gurux.DLMS.UI
         /// <param name="index">Attribute index.</param>
         /// <param name="value">Updated value.</param>
         /// <returns></returns>
-        private static GXValueField UpdateProperty(IGXDLMSView view, ControlCollection controls, int index, object value)
+        private static GXValueField UpdateProperty(IGXDLMSView view, ControlCollection controls, int index, object value,
+            bool showSnapshotValues)
         {
             GXValueField item = null;
             foreach (Control it in controls)
@@ -222,7 +228,7 @@ namespace Gurux.DLMS.UI
                     {
                         obj.Target = view.Target;
                         obj.UpdateValueItems(view.Target, index, value);
-                        if (obj.Index != 1 && view.Target.GetLastReadTime(index) == DateTime.MinValue
+                        if (!showSnapshotValues && obj.Index != 1 && view.Target.GetLastReadTime(index) == DateTime.MinValue
                             && obj.Type != ValueFieldType.CheckedListBox)
                         {
                             obj.Value = null;
@@ -240,7 +246,7 @@ namespace Gurux.DLMS.UI
                 }
                 else if (it.Controls.Count != 0)
                 {
-                    item = UpdateProperty(view, it.Controls, index, value);
+                    item = UpdateProperty(view, it.Controls, index, value, showSnapshotValues);
                 }
                 if (item != null)
                 {
@@ -250,7 +256,8 @@ namespace Gurux.DLMS.UI
             return item;
         }
 
-        delegate void UpdatePropertyEventHandler(GXDLMSClient client, GXDLMSObject obj, int index, IGXDLMSView view, bool connected, bool user);
+        delegate void UpdatePropertyEventHandler(GXDLMSClient client, GXDLMSObject obj, int index, IGXDLMSView view,
+            bool connected, bool user, bool showSnapshotValues);
 
         /// <summary>
         /// Update selected values of given COSEM object.
@@ -258,6 +265,12 @@ namespace Gurux.DLMS.UI
         /// <param name="obj"></param>
         /// <param name="view"></param>
         public static void UpdateProperty(GXDLMSClient client, GXDLMSObject obj, int index, IGXDLMSView view, bool connected, bool user)
+        {
+            UpdateProperty(client, obj, index, view, connected, user, false);
+        }
+
+        private static void UpdateProperty(GXDLMSClient client, GXDLMSObject obj, int index, IGXDLMSView view,
+            bool connected, bool user, bool showSnapshotValues)
         {
             if (obj == null)
             {
@@ -267,7 +280,7 @@ namespace Gurux.DLMS.UI
             {
                 try
                 {
-                    (view as Form).BeginInvoke(new UpdatePropertyEventHandler(UpdateProperty), client, obj, index, view, connected, user);
+                    (view as Form).BeginInvoke(new UpdatePropertyEventHandler(UpdateProperty), client, obj, index, view, connected, user, showSnapshotValues);
                 }
                 catch (Exception ex)
                 {
@@ -294,7 +307,7 @@ namespace Gurux.DLMS.UI
                     object value = null;
                     bool dirty = view.Target.GetDirty(it, out value);
                     value = view.Target.GetValues()[it - 1];
-                    GXValueField item = UpdateProperty(view, ((Form)view).Controls, it, value);
+                    GXValueField item = UpdateProperty(view, ((Form)view).Controls, it, value, showSnapshotValues);
                     try
                     {
                         if (item == null || item.NotifyChanges)
@@ -330,9 +343,14 @@ namespace Gurux.DLMS.UI
                         {
                             view.ErrorProvider.SetError(it, Properties.Resources.ValueChangedTxt);
                         }
+                        else if (index == 0)
+                        {
+                            // A matched zero-index field retains the whole-view reset convention.
+                            view.ErrorProvider.Clear();
+                        }
                         else
                         {
-                            view.ErrorProvider.Clear();
+                            view.ErrorProvider.SetError(it, string.Empty);
                         }
                         found = true;
                     }
@@ -543,11 +561,25 @@ namespace Gurux.DLMS.UI
         /// <param name="connected"></param>
         public static void ObjectChanged(IGXDLMSView view, GXDLMSClient client, GXDLMSObject target, bool connected)
         {
+            ObjectChanged(view, client, target, connected, false);
+        }
+
+        /// <summary>
+        /// Display a disconnected object's saved attribute values, including values without a meter read timestamp.
+        /// </summary>
+        /// <remarks>Snapshot mode is read-only and cannot be combined with connected semantics.</remarks>
+        public static void ObjectChanged(IGXDLMSView view, GXDLMSClient client, GXDLMSObject target, bool connected,
+            bool showSnapshotValues)
+        {
+            if (connected && showSnapshotValues)
+            {
+                throw new ArgumentException("Snapshot values require disconnected semantics.", nameof(connected));
+            }
             UpdateAccessRights(view, client, target, connected);
 
             for (int index = 1; index <= (target as IGXDLMSBase).GetAttributeCount(); ++index)
             {
-                UpdateProperty(client, target, index, view, connected, true);
+                UpdateProperty(client, target, index, view, connected, true, showSnapshotValues);
             }
         }
 
@@ -559,6 +591,7 @@ namespace Gurux.DLMS.UI
                 {
                     GXButton btn = it as GXButton;
                     btn.View = view;
+                    btn.Click -= eventHandler;
                     btn.Click += eventHandler;
                 }
                 else if (it is GXValueField)

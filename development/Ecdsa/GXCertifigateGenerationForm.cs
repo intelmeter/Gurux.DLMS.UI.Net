@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -47,6 +47,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         private string _path;
         private readonly string _address;
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXx509Certificate Certificate
         {
             get;
@@ -55,6 +56,8 @@ namespace Gurux.DLMS.UI.Ecdsa
 
         public GXCertifigateGenerationForm(string path, string address)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _address = address;
             _path = path;
@@ -62,6 +65,8 @@ namespace Gurux.DLMS.UI.Ecdsa
 
         public GXCertifigateGenerationForm(string address, GXPkcs10 pkc10, CertificateType type, byte[] systemTitle)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _address = address;
             SystemTitleTb.Text = GXDLMSTranslator.ToHex(systemTitle, false);

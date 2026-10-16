@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN;
 using Gurux.DLMS.ASN.Enums;
 using Gurux.DLMS.Ecdsa;
 using Gurux.DLMS.Ecdsa.Enums;
@@ -30,6 +30,8 @@ namespace Gurux.DLMS.UI.Ecdsa
 
         public GXKeyForm(IGXUpdater updater, string address, string keyFolder, string certificateFolder, string title, SecuritySuite securitySuite, byte[] systemTitle)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _updater = updater;
             _address = address;
@@ -400,7 +402,7 @@ namespace Gurux.DLMS.UI.Ecdsa
         {
             try
             {
-                Process.Start(KeyFolder);
+                Process.Start(new System.Diagnostics.ProcessStartInfo(KeyFolder) { UseShellExecute = true });
             }
             catch (Exception ex)
             {

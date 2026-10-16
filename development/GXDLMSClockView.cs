@@ -51,12 +51,15 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSClockView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             this.EnabledCB.Checked = false;
         }
 
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -272,6 +275,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
@@ -288,29 +292,29 @@ namespace Gurux.DLMS.UI
             switch (index)
             {
                 case 2:
-                    errorProvider1.SetError(TimeTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(TimeTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 3:
-                    errorProvider1.SetError(TimeZoneTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(TimeZoneTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 4:
-                    errorProvider1.SetError(StatusTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(StatusTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 5:
-                    errorProvider1.SetError(BeginTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(BeginTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 6:
-                    errorProvider1.SetError(EndTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(EndTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 7:
-                    errorProvider1.SetError(DeviationTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(DeviationTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 8:
-                    errorProvider1.SetError(EnabledCB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(EnabledCB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 9:
                     ErrorProvider.SetIconAlignment(ClockBaseTB, ErrorIconAlignment.TopRight);
-                    errorProvider1.SetError(ClockBaseTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(ClockBaseTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 default:
                     errorProvider1.Clear();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,6 +16,8 @@ namespace Gurux.DLMS.UI
 
         public GXDLMSKeyTableDlg(GXKeyValuePair<byte, byte[]> item)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             IdTb.Text = item.Key.ToString();
             KeyTb.Text = GXDLMSTranslator.ToHex(item.Value);

@@ -38,7 +38,7 @@ namespace Gurux.DLMS.UI
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GXDLMSAccountView));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.GeneralTab = new System.Windows.Forms.TabPage();
             this.ResetBtn = new Gurux.DLMS.UI.GXButton();
             this.ActivateBtn = new Gurux.DLMS.UI.GXButton();

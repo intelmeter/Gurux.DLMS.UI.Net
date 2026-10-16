@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -60,6 +60,8 @@ namespace Gurux.DLMS.UI
         public GXDLMSNtpDlg(UInt32 id, byte[] key, bool remove)
         {
             Id = id;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             IdTb.Text = id.ToString();
             KeyTb.Text = GXDLMSTranslator.ToHex(key);

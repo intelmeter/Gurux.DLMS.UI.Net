@@ -40,7 +40,7 @@ namespace Gurux.DLMS.UI
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.BufferTb = new System.Windows.Forms.TextBox();
             this.TemplateDescriptionTb = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.ProfileGenericView = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();

@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -58,6 +58,8 @@ namespace Gurux.DLMS.UI
             GXDLMSObjectCollection objects)
         {
             Target = target;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             foreach (GXDLMSObject it in objects)
             {

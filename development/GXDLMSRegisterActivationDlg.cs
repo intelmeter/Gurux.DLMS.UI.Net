@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -42,11 +42,13 @@ namespace Gurux.DLMS.UI
 {
     public partial class GXDLMSRegisterActivationDlg : Form
     {
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public byte[] MaskName
         {
             get;
             set;
         }
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public byte[] IndexArray
         {
             get;
@@ -71,6 +73,8 @@ namespace Gurux.DLMS.UI
         /// <param name="objects">List of COSEM objects.</param>
         public GXDLMSRegisterActivationDlg(string caption, byte[] maskName, byte[] indexArray)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Text = caption;
             if (IsAscii(maskName))

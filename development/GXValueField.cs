@@ -57,6 +57,7 @@ namespace Gurux.DLMS.UI
         /// <summary>
         /// Default value field type.
         /// </summary>
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         internal ValueFieldType DefaultType
         {
             get; set;
@@ -182,6 +183,7 @@ namespace Gurux.DLMS.UI
         /// <summary>
         /// Attribute index.
         /// </summary>
+        [System.ComponentModel.DefaultValue(0)]
         public int Index
         {
             get;
@@ -194,6 +196,7 @@ namespace Gurux.DLMS.UI
         /// <remarks>
         /// This can be used if UI needs to change when value or access rights change.
         /// </remarks>
+        [System.ComponentModel.DefaultValue(false)]
         public bool NotifyChanges
         {
             get;
@@ -227,6 +230,7 @@ namespace Gurux.DLMS.UI
         }
 
 
+        [System.ComponentModel.DefaultValue(ValueFieldType.TextBox)]
         public ValueFieldType Type
         {
             get

@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -50,10 +50,13 @@ namespace Gurux.DLMS.UI
         /// <param name="value">Text Value.</param>
         public GXTextDlg(string caption, string label, string value)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             this.Text = caption;
             TextLbl.Text = label;
             TextTb.Text = value;
+            ApplyLayout();
         }
 
         /// <summary>
@@ -65,11 +68,32 @@ namespace Gurux.DLMS.UI
         /// <param name="type">Data type.</param>
         public GXTextDlg(string caption, string label, string value, Type type)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             this.Text = caption;
             TextLbl.Text = label;
             TextTb.Text = value;
             this.type = type;
+            ApplyLayout();
+        }
+
+        private void ApplyLayout()
+        {
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.CompactRow(table, TextLbl.Text, TextTb);
+            TextLbl.Visible = false;
+            table.TabIndex = 0;
+            Controls.Add(table);
+            var footer = ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            footer.TabIndex = 1;
+            OkBtn.TabIndex = 0;
+            CancelBtn.TabIndex = 1;
+            ClientSize = new System.Drawing.Size((int)(600 * DeviceDpi / 96f), (int)(160 * DeviceDpi / 96f));
+            ModernPresentation.Apply(this);
+            ActiveControl = TextTb;
+            ResumeLayout(true);
         }
 
         public string GetValue()

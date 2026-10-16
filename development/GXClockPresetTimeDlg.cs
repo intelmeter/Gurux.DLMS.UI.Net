@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -68,7 +68,21 @@ namespace Gurux.DLMS.UI
 
         public GXClockPresetTimeDlg()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, "Preset clock time");
+            ModernPresentation.CompactRow(table, "Preset time", PresetTimeTb, NowPresetBtn);
+            ModernPresentation.CompactRow(table, "Interval start", IntervalStartTb, NowStartBtn);
+            ModernPresentation.CompactRow(table, "Interval end", IntervalEndTb, NowEndBtn);
+            PresetTimeLbl.Visible = IntervalStartLbl.Visible = IntervalEndLbl.Visible = false;
+            Controls.Add(table);
+            ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            ClientSize = new System.Drawing.Size((int)(600 * DeviceDpi / 96f), (int)(260 * DeviceDpi / 96f));
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
         }
 
         /// <summary>
@@ -80,9 +94,12 @@ namespace Gurux.DLMS.UI
         {
             try
             {
-                PresetTime = new GXDateTime(PresetTimeTb.Text);
-                IntervalStart = new GXDateTime(IntervalStartTb.Text);
-                IntervalEnd = new GXDateTime(IntervalEndTb.Text);
+                var preset = new GXDateTime(PresetTimeTb.Text);
+                var start = new GXDateTime(IntervalStartTb.Text);
+                var end = new GXDateTime(IntervalEndTb.Text);
+                PresetTime = preset;
+                IntervalStart = start;
+                IntervalEnd = end;
             }
             catch (Exception ex)
             {

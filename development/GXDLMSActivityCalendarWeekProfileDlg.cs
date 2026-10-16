@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -44,6 +44,8 @@ namespace Gurux.DLMS.UI
         GXDLMSWeekProfile Target;
         public GXDLMSActivityCalendarWeekProfileDlg(GXDLMSWeekProfile target, GXDLMSDayProfile[] days)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Target = target;
             AsciiBtn.Checked = GXHelpers.IsAscii(Target.Name);

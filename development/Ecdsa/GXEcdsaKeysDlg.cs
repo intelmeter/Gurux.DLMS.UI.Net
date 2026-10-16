@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN;
 using Gurux.DLMS.ASN.Enums;
 using Gurux.DLMS.Objects.Enums;
 using System;
@@ -30,6 +30,8 @@ namespace Gurux.DLMS.UI.Ecdsa
             SecuritySuite securitySuite,
             byte[] systemTitle)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             _address = address;
             if (systemTitle != null && systemTitle.Length != 8)

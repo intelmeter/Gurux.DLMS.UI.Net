@@ -55,10 +55,44 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSScheduleView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, "Schedule");
+            ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+            ModernPresentation.Section(table, ValueLbl.Text);
+            int row = table.RowCount++;
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 300 * DeviceDpi / 96));
+            EntriesView.Dock = DockStyle.Fill;
+            EntriesView.AccessibleName = ValueLbl.Text;
+            EntriesView.TabIndex = row * 2;
+            table.Controls.Add(EntriesView, 0, row);
+            table.SetColumnSpan(EntriesView, 3);
+            int[] widths = { 64, 72, 132, 76, 112, 124, 180, 132, 112, 112 };
+            for (int pos = 0; pos != widths.Length; ++pos)
+                EntriesView.Columns[pos].Width = widths[pos] * DeviceDpi / 96;
+            var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true, WrapContents = true };
+            foreach (var button in new[] { gxButton1, AddObjectBtn, RemoveObjectBtn })
+            {
+                ModernPresentation.CompactButton(button);
+                actions.Controls.Add(button);
+            }
+            row = table.RowCount++;
+            table.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            actions.TabIndex = row * 2;
+            table.Controls.Add(actions, 0, row);
+            table.SetColumnSpan(actions, 3);
+            Controls.Add(table);
+            Controls.Remove(groupBox1);
+            groupBox1.Dispose();
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -133,7 +167,7 @@ namespace Gurux.DLMS.UI
                     if (EntriesView.SelectedItems.Count == 1)
                     {
                         GXScheduleEntry it = (GXScheduleEntry)EntriesView.SelectedItems[0].Tag;
-                        GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 1);
+                        using GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 1);
                         if (dlg.ShowDialog(this.Parent) == DialogResult.OK)
                         {
                             if (it.Enable)
@@ -160,7 +194,7 @@ namespace Gurux.DLMS.UI
                 {
                     //Add
                     GXScheduleEntry it = new GXScheduleEntry();
-                    GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 2);
+                    using GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 2);
                     if (dlg.ShowDialog(this.Parent) == DialogResult.OK)
                     {
                         arg.Value = target.Insert(arg.Client, it);
@@ -177,7 +211,7 @@ namespace Gurux.DLMS.UI
                     if (EntriesView.SelectedItems.Count == 1)
                     {
                         GXScheduleEntry it = (GXScheduleEntry)EntriesView.SelectedItems[0].Tag;
-                        GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 3);
+                        using GXDLMScheduleDlg dlg = new GXDLMScheduleDlg(it, target.Parent, 3);
                         if (dlg.ShowDialog(this.Parent) == DialogResult.OK)
                         {
                             arg.Value = target.Delete(arg.Client, it);
@@ -221,6 +255,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get

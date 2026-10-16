@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -40,12 +40,14 @@ namespace Gurux.DLMS.UI
 {
     public partial class GXDLMSTargetObjectDlg : Form
     {
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
             set;
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public byte Index
         {
             get;
@@ -61,6 +63,8 @@ namespace Gurux.DLMS.UI
         public GXDLMSTargetObjectDlg(string caption, GXDLMSObject target, GXDLMSObjectCollection objects)
         {
             Target = target;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Text = caption;
             if (objects == null)
@@ -80,6 +84,7 @@ namespace Gurux.DLMS.UI
                 }
             }
             IndexLbl.Visible = IndexTB.Visible = false;
+            ApplyLayout(false);
         }
 
         /// <summary>
@@ -92,6 +97,8 @@ namespace Gurux.DLMS.UI
         public GXDLMSTargetObjectDlg(string caption, GXDLMSObject target, int index, GXDLMSObjectCollection objects)
         {
             Target = target;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Text = caption;
             if (objects == null)
@@ -112,6 +119,31 @@ namespace Gurux.DLMS.UI
                 }
                 IndexTB.Text = index.ToString();
             }
+            ApplyLayout(true);
+        }
+
+        private void ApplyLayout(bool showIndex)
+        {
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.CompactRow(table, TargetLbl.Text, TargetCb);
+            TargetLbl.Visible = false;
+            if (showIndex)
+            {
+                ModernPresentation.CompactRow(table, IndexLbl.Text, IndexTB);
+            }
+            IndexLbl.Visible = false;
+            table.TabIndex = 0;
+            Controls.Add(table);
+            var footer = ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            footer.TabIndex = 1;
+            OkBtn.TabIndex = 0;
+            CancelBtn.TabIndex = 1;
+            ClientSize = new System.Drawing.Size((int)(600 * DeviceDpi / 96f),
+                (int)((showIndex ? 200 : 160) * DeviceDpi / 96f));
+            ModernPresentation.Apply(this);
+            ActiveControl = TargetCb.Enabled ? (Control)TargetCb : OkBtn;
+            ResumeLayout(true);
         }
 
         private void GXDLMSTargetObjectDlg_Load(object sender, EventArgs e)
@@ -129,13 +161,15 @@ namespace Gurux.DLMS.UI
         {
             try
             {
+                GXDLMSObject selectedTarget = Target;
+                byte selectedIndex = Index;
                 if (TargetCb.Enabled)
                 {
                     if (TargetCb.SelectedItem == null)
                     {
                         throw new Exception("Target is not selected.");
                     }
-                    Target = TargetCb.SelectedItem as GXDLMSObject;
+                    selectedTarget = TargetCb.SelectedItem as GXDLMSObject;
                 }
                 if (IndexTB.Visible)
                 {
@@ -143,12 +177,14 @@ namespace Gurux.DLMS.UI
                     {
                         throw new Exception("Invalid index.");
                     }
-                    Index = byte.Parse(IndexTB.Text);
-                    if (Index == 0)
+                    selectedIndex = byte.Parse(IndexTB.Text);
+                    if (selectedIndex == 0)
                     {
                         throw new Exception("Invalid index.");
                     }
                 }
+                Target = selectedTarget;
+                Index = selectedIndex;
             }
             catch (Exception ex)
             {

@@ -43,7 +43,7 @@ namespace Gurux.DLMS.UI
             this.LogicalNameTB = new Gurux.DLMS.UI.GXValueField();
             this.LogicalNameLbl = new System.Windows.Forms.Label();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl(true);
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.DuplicateDetectionTb = new Gurux.DLMS.UI.GXValueField();
             this.DuplicateDetectionLbl = new System.Windows.Forms.Label();

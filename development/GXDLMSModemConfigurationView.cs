@@ -55,10 +55,47 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSModemConfigurationView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            if (System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            {
+                InitializePresentation();
+            }
+        }
+        private void InitializePresentation()
+        {
+            SuspendLayout();
+            try
+            {
+                var table = ModernPresentation.CompactSurface(this);
+                Controls.Add(table);
+                ModernPresentation.Section(table, groupBox1.Text);
+                ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+                ModernPresentation.CompactRow(table, CommunicationSpeedLbl.Text, CommunicationSpeedTB);
+                ModernPresentation.CompactRow(table, InitialisationLbl.Text, InitialisationView, height: 180);
+                var actions = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = true };
+                foreach (var button in new[] { AddBtn, EditBtn, RemoveBtn })
+                {
+                    ModernPresentation.CompactButton(button);
+                    actions.Controls.Add(button);
+                }
+                ModernPresentation.CompactRow(table, string.Empty, actions, height: 80);
+                ModernPresentation.CompactRow(table, ModemProfileLbl.Text, ModemProfileTB, height: 120);
+                // CompactRow frames ordinary text boxes; multiline content fills its row.
+                ModemProfileTB.Dock = DockStyle.Fill;
+                Controls.Remove(groupBox1);
+                groupBox1.Dispose();
+                ModernPresentation.Apply(this);
+            }
+            finally
+            {
+                ResumeLayout(true);
+            }
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -159,6 +196,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
@@ -175,13 +213,13 @@ namespace Gurux.DLMS.UI
             switch (index)
             {
                 case 2:
-                    errorProvider1.SetError(CommunicationSpeedTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(CommunicationSpeedTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 3:
-                    errorProvider1.SetError(InitialisationView, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(InitialisationView, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 case 4:
-                    errorProvider1.SetError(ModemProfileTB, Properties.Resources.ValueChangedTxt);
+                    errorProvider1.SetError(ModemProfileTB, Dirty ? Properties.Resources.ValueChangedTxt : string.Empty);
                     break;
                 default:
                     errorProvider1.Clear();
@@ -252,16 +290,20 @@ namespace Gurux.DLMS.UI
                 list.AddRange(target.InitialisationStrings);
             }
 
+            bool removed = InitialisationView.SelectedItems.Count != 0;
             while (InitialisationView.SelectedItems.Count != 0)
             {
                 ListViewItem li = InitialisationView.SelectedItems[0];
                 GXDLMSModemInitialisation item = (GXDLMSModemInitialisation)li.Tag;
                 li.Remove();
                 errorProvider1.SetError(InitialisationView, Properties.Resources.ValueChangedTxt);
-                Target.UpdateDirty(3, target.InitialisationStrings);
                 list.Remove(item);
             }
             target.InitialisationStrings = list.ToArray();
+            if (removed)
+            {
+                Target.UpdateDirty(3, target.InitialisationStrings);
+            }
         }
     }
 }

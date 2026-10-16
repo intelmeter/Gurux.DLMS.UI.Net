@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -42,25 +42,18 @@ namespace Gurux.DLMS.UI
 {
     public partial class GXDLMScheduleDlg : Form
     {
-        GXScheduleEntry entry;
+        readonly GXScheduleEntry entry;
+        readonly int mode;
         public GXDLMScheduleDlg(
             GXScheduleEntry e,
             GXDLMSObjectCollection objects, int index)
         {
             entry = e;
-            if (entry.SwitchTime == null)
-            {
-                entry.SwitchTime = new GXTime();
-            }
-            if (entry.BeginDate == null)
-            {
-                entry.BeginDate = new GXDate(-1, 1, 1);
-            }
-            if (entry.EndDate == null)
-            {
-                entry.EndDate = new GXDate(-1, 1, 1);
-            }
+            mode = index;
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            ApplyLayout();
             foreach (GXDLMSObject it in objects.GetObjects(ObjectType.ScriptTable))
             {
                 ScriptTb.Items.Add(it);
@@ -69,7 +62,7 @@ namespace Gurux.DLMS.UI
             IndexTB.Text = entry.Index.ToString();
             EnabledCb.Checked = entry.Enable;
             SelectorTb.Text = entry.ScriptSelector.ToString();
-            TimeTb.Text = entry.SwitchTime.ToFormatString();
+            TimeTb.Text = (entry.SwitchTime ?? new GXTime()).ToFormatString();
             MondayCb.Checked = (entry.ExecWeekdays & Weekdays.Monday) != 0;
             TuesdayCb.Checked = (entry.ExecWeekdays & Weekdays.Tuesday) != 0;
             WednesdayCb.Checked = (entry.ExecWeekdays & Weekdays.Wednesday) != 0;
@@ -79,8 +72,8 @@ namespace Gurux.DLMS.UI
             SundayCb.Checked = (entry.ExecWeekdays & Weekdays.Sunday) != 0;
             ValidityWindowTb.Text = entry.ValidityWindow.ToString();
             ExecSpecDaysTb.Text = entry.ExecSpecDays;
-            BeginTb.Text = entry.BeginDate.ToFormatString();
-            EndTb.Text = entry.EndDate.ToFormatString();
+            BeginTb.Text = (entry.BeginDate ?? new GXDate(-1, 1, 1)).ToFormatString();
+            EndTb.Text = (entry.EndDate ?? new GXDate(-1, 1, 1)).ToFormatString();
             //Enable/Disable
             if (index == 1)
             {
@@ -129,6 +122,58 @@ namespace Gurux.DLMS.UI
             }
         }
 
+
+        private void ApplyLayout()
+        {
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, "Schedule entry");
+            ModernPresentation.CompactRow(table, IndexLbl.Text, IndexTB);
+            ModernPresentation.CompactRow(table, "", EnabledCb);
+            ModernPresentation.CompactRow(table, ScriptLbl.Text, ScriptTb);
+            ModernPresentation.CompactRow(table, SelectorLbl.Text, SelectorTb);
+            ModernPresentation.Section(table, "Execution");
+            ModernPresentation.CompactRow(table, TimeLbl.Text, TimeTb);
+            ModernPresentation.CompactRow(table, ValidityWindowLbl.Text, ValidityWindowTb);
+            var weekdays = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = true };
+            foreach (var day in new[] { MondayCb, TuesdayCb, WednesdayCb, ThursdayCb, FridayCb, SaturdayCb, SundayCb })
+            {
+                day.Margin = new Padding(4, 6, 12, 6);
+                weekdays.Controls.Add(day);
+            }
+            ExecWeekdaysGb.Controls.Add(weekdays);
+            ExecWeekdaysGb.Dock = DockStyle.Fill;
+            int row = table.RowCount++;
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 100 * DeviceDpi / 96));
+            table.Controls.Add(ExecWeekdaysGb, 0, row);
+            table.SetColumnSpan(ExecWeekdaysGb, 3);
+            ExecWeekdaysGb.TabIndex = row * 2;
+            ModernPresentation.CompactRow(table, ExecSpecDaysLbl.Text, ExecSpecDaysTb);
+            ModernPresentation.CompactRow(table, BeginLbl.Text, BeginTb);
+            ModernPresentation.CompactRow(table, EndLbl.Text, EndTb);
+            foreach (var label in new[] { IndexLbl, ScriptLbl, SelectorLbl, TimeLbl, ValidityWindowLbl, ExecSpecDaysLbl, BeginLbl, EndLbl })
+                label.Visible = false;
+            // Scroll the fields independently so confirmation remains reachable at narrow widths.
+            var body = new Panel
+            {
+                Name = "ScheduleBody", Dock = DockStyle.Fill, AutoScroll = true,
+                Padding = Padding, AutoScrollMinSize = AutoScrollMinSize, TabIndex = 0
+            };
+            AutoScroll = false;
+            AutoScrollMinSize = System.Drawing.Size.Empty;
+            Padding = Padding.Empty;
+            body.Controls.Add(table);
+            Controls.Add(body);
+            table.TabIndex = 0;
+            var footer = ModernPresentation.DialogFooter(this, OkBtn, CancelBtn);
+            footer.TabIndex = 1;
+            OkBtn.TabIndex = 0;
+            CancelBtn.TabIndex = 1;
+            ClientSize = new System.Drawing.Size(640 * DeviceDpi / 96, 710 * DeviceDpi / 96);
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
+        }
+
         private void OkBtn_Click(object sender, EventArgs e)
         {
             try
@@ -137,48 +182,76 @@ namespace Gurux.DLMS.UI
                 {
                     throw new Exception("Target is not selected.");
                 }
-                entry.Index = Convert.ToUInt16(IndexTB.Text);
-                if (entry.Index == 0)
+                // Validate the complete input before publishing any caller-owned state.
+                var candidate = new GXScheduleEntry();
+                candidate.Index = Convert.ToUInt16(IndexTB.Text);
+                if (candidate.Index == 0)
                 {
                     throw new Exception("Invalid index. Index is one based.");
                 }
-                entry.Enable = EnabledCb.Checked;
-                entry.Script = (GXDLMSScriptTable)ScriptTb.SelectedItem;
-                entry.ScriptSelector = Convert.ToUInt16(SelectorTb.Text);
-                entry.SwitchTime = new GXTime(TimeTb.Text);
-                entry.ExecWeekdays = Weekdays.None;
+                candidate.Enable = EnabledCb.Checked;
+                candidate.Script = (GXDLMSScriptTable)ScriptTb.SelectedItem;
+                candidate.ScriptSelector = Convert.ToUInt16(SelectorTb.Text);
+                candidate.SwitchTime = new GXTime(TimeTb.Text);
+                candidate.ExecWeekdays = Weekdays.None;
                 if (MondayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Monday;
+                    candidate.ExecWeekdays |= Weekdays.Monday;
                 }
                 if (TuesdayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Tuesday;
+                    candidate.ExecWeekdays |= Weekdays.Tuesday;
                 }
                 if (WednesdayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Wednesday;
+                    candidate.ExecWeekdays |= Weekdays.Wednesday;
                 }
                 if (ThursdayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Thursday;
+                    candidate.ExecWeekdays |= Weekdays.Thursday;
                 }
                 if (FridayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Friday;
+                    candidate.ExecWeekdays |= Weekdays.Friday;
                 }
                 if (SaturdayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Saturday;
+                    candidate.ExecWeekdays |= Weekdays.Saturday;
                 }
                 if (SundayCb.Checked)
                 {
-                    entry.ExecWeekdays |= Weekdays.Sunday;
+                    candidate.ExecWeekdays |= Weekdays.Sunday;
                 }
-                entry.ValidityWindow = Convert.ToUInt16(ValidityWindowTb.Text);
-                entry.ExecSpecDays = ExecSpecDaysTb.Text;
-                entry.BeginDate = new GXDate(BeginTb.Text);
-                entry.EndDate = new GXDate(EndTb.Text);
+                candidate.ValidityWindow = Convert.ToUInt16(ValidityWindowTb.Text);
+                candidate.ExecSpecDays = ExecSpecDaysTb.Text;
+                candidate.BeginDate = new GXDate(BeginTb.Text);
+                candidate.EndDate = new GXDate(EndTb.Text);
+                if (mode == 1)
+                {
+                    entry.Enable = candidate.Enable;
+                }
+                else if (mode == 2)
+                {
+                    // An unchanged formatted date/time must retain its full skip metadata.
+                    if (entry.SwitchTime != null && TimeTb.Text == entry.SwitchTime.ToFormatString())
+                        candidate.SwitchTime = entry.SwitchTime;
+                    if (entry.BeginDate != null && BeginTb.Text == entry.BeginDate.ToFormatString())
+                        candidate.BeginDate = entry.BeginDate;
+                    if (entry.EndDate != null && EndTb.Text == entry.EndDate.ToFormatString())
+                        candidate.EndDate = entry.EndDate;
+                    entry.Index = candidate.Index;
+                    entry.Enable = candidate.Enable;
+                    entry.Script = candidate.Script;
+                    entry.ScriptSelector = candidate.ScriptSelector;
+                    entry.SwitchTime = candidate.SwitchTime;
+                    entry.ExecWeekdays = candidate.ExecWeekdays;
+                    entry.ValidityWindow = candidate.ValidityWindow;
+                    entry.ExecSpecDays = candidate.ExecSpecDays;
+                    entry.BeginDate = candidate.BeginDate;
+                    entry.EndDate = candidate.EndDate;
+                }
+                // Mode 3 is confirmation only. The original validation still applies.
+
             }
             catch (Exception ex)
             {

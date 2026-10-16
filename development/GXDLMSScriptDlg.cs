@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.Enums;
+using Gurux.DLMS.Enums;
 using Gurux.DLMS.Objects;
 //
 // --------------------------------------------------------------------------
@@ -93,6 +93,8 @@ namespace Gurux.DLMS.UI
         /// <param name="value"></param>
         public GXDLMSScriptDlg(GXDLMSScript value, GXDLMSObjectCollection objects, bool readOnly)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             target = value;
             targets = objects;

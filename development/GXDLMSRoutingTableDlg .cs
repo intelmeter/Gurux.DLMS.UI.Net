@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.Objects;
+using Gurux.DLMS.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,6 +15,8 @@ namespace Gurux.DLMS.UI
         private GXDLMSRoutingTable Item;
         public GXDLMSRoutingTableDlg(GXDLMSRoutingTable item)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             Item = item;
             DestinationTb.Text = Item.DestinationAddress.ToString();

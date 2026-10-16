@@ -23,7 +23,7 @@ namespace Gurux.DLMS.UI
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.VersionLbl = new System.Windows.Forms.Label();
             this.VersionTb = new System.Windows.Forms.TextBox();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabControl1 = new Gurux.DLMS.UI.AssociationTabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.EditBtn = new Gurux.DLMS.UI.GXButton();
             this.AddObjectBtn = new Gurux.DLMS.UI.GXButton();
@@ -1199,7 +1199,7 @@ namespace Gurux.DLMS.UI
 
         #endregion
 
-        private TabControl tabControl1;
+        private AssociationTabControl tabControl1;
         private TabPage tabPage1;
         private ListView ObjectsView;
         private ColumnHeader ClassIdHeader;

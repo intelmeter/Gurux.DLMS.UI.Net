@@ -1,4 +1,4 @@
-﻿using Gurux.DLMS.ASN;
+using Gurux.DLMS.ASN;
 using Gurux.DLMS.Ecdsa;
 using Gurux.DLMS.Ecdsa.Enums;
 using System;
@@ -11,6 +11,8 @@ namespace Gurux.DLMS.UI.Ecdsa
     {
         public GXPrivateKeyForm()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
         }
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // --------------------------------------------------------------------------
 //  Gurux Ltd
 //
@@ -51,6 +51,8 @@ namespace Gurux.DLMS.UI
         /// <param name="stream">Image file.</param>
         public GXImageInfoDlg(string path)
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
             if (string.Compare(Path.GetExtension(path), ".xml", true) == 0)
             {

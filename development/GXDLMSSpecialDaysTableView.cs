@@ -50,10 +50,39 @@ namespace Gurux.DLMS.UI
         /// </summary>
         public GXDLMSSpecialDaysTableView()
         {
+            // Preserve the font metrics used by the fixed-coordinate designer.
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
             InitializeComponent();
+            SuspendLayout();
+            var table = ModernPresentation.CompactSurface(this);
+            ModernPresentation.Section(table, "Special days table");
+            ModernPresentation.CompactRow(table, LogicalNameLbl.Text, LogicalNameTB);
+            ModernPresentation.Section(table, "Entries");
+            int row = table.RowCount++;
+            table.RowStyles.Add(new RowStyle(SizeType.Absolute, 280 * DeviceDpi / 96));
+            SpecialDay.Dock = DockStyle.Fill;
+            SpecialDay.AccessibleName = "Special day entries";
+            SpecialDay.TabIndex = 4;
+            table.Controls.Add(SpecialDay, 0, row);
+            table.SetColumnSpan(SpecialDay, 3);
+            IndexHeader.Width = 90 * DeviceDpi / 96;
+            SpecialDayDateHeader.Width = 240 * DeviceDpi / 96;
+            DayIdHeader.Width = 90 * DeviceDpi / 96;
+            var actions = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill };
+            ModernPresentation.CompactButton(DayAddBtn);
+            ModernPresentation.CompactButton(DayRemoveBtn);
+            actions.Controls.Add(DayAddBtn);
+            actions.Controls.Add(DayRemoveBtn);
+            ModernPresentation.CompactRow(table, "Actions", actions, height: 48);
+            Controls.Add(table);
+            Controls.Remove(groupBox1);
+            groupBox1.Dispose();
+            ModernPresentation.Apply(this);
+            ResumeLayout(true);
         }
         #region IGXDLMSView Members
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public GXDLMSObject Target
         {
             get;
@@ -72,7 +101,7 @@ namespace Gurux.DLMS.UI
                     foreach (GXDLMSSpecialDay it in items)
                     {
                         ListViewItem li = SpecialDay.Items.Add(it.Index.ToString());
-                        li.SubItems.Add(it.Date.ToString());
+                        li.SubItems.Add(it.Date == null ? string.Empty : it.Date.ToString());
                         li.SubItems.Add(it.DayId.ToString());
                         li.Tag = it;
                     }
@@ -121,7 +150,7 @@ namespace Gurux.DLMS.UI
                     if (!remove)
                     {
                         li = SpecialDay.Items.Add(it.Index.ToString());
-                        li.SubItems.Add(it.Date.ToString());
+                        li.SubItems.Add(it.Date == null ? string.Empty : it.Date.ToString());
                         li.SubItems.Add(it.DayId.ToString());
                         li.Tag = it;
                         arg.Value = target.Insert(arg.Client, it);
@@ -145,12 +174,12 @@ namespace Gurux.DLMS.UI
             if (arg.Index == 1)
             {
                 GXDLMSSpecialDay it = new GXDLMSSpecialDay();
-                GXDLMSSpecialDaysTableDlg dlg = new GXDLMSSpecialDaysTableDlg(it, false);
+                using GXDLMSSpecialDaysTableDlg dlg = new GXDLMSSpecialDaysTableDlg(it, false);
                 OnSpecialDaysDlg(arg, dlg, it);
             }
             else if (arg.Index == 2)
             {
-                GXDLMSSpecialDaysTableDlg dlg = new GXDLMSSpecialDaysTableDlg(null, true);
+                using GXDLMSSpecialDaysTableDlg dlg = new GXDLMSSpecialDaysTableDlg(null, true);
                 OnSpecialDaysDlg(arg, dlg, null);               
             }
         }
@@ -168,6 +197,7 @@ namespace Gurux.DLMS.UI
             }
         }
 
+        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public string Description
         {
             get
