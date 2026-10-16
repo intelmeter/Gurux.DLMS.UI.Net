@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Modified for the Intelmeter fork, 2026-10-16: .NET 10 migration, UI modernization and compatibility fixes. GPL-2.0-only; original notices retained. -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <PackageId>Intelmeter.Gurux.DLMS.UI</PackageId>
+    <Authors>Gurux Ltd; Intelmeter fork contributors</Authors>
+    <Description>Unofficial Intelmeter .NET 10 fork of the Gurux DLMS UI library. Not endorsed by Gurux.</Description>
+    <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/intelmeter/Gurux.DLMS.UI.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/intelmeter/Gurux.DLMS.UI.Net</RepositoryUrl>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>Gurux.DLMS.UI</RootNamespace>
@@ -1088,5 +1095,11 @@
   <ItemGroup>
     <Compile Include="ModernPresentation.cs" />
     <Compile Include="GXDLMSReadOnlyObjectView.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LICENSE" Link="legal-ui\LICENSE" Pack="true" PackagePath="\" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\THIRD-PARTY-NOTICES.txt" Link="legal-ui\THIRD-PARTY-NOTICES.txt" Pack="true" PackagePath="THIRD-PARTY-NOTICES.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\RELEASE-COMPLIANCE.txt" Link="legal-ui\RELEASE-COMPLIANCE.txt" Pack="true" PackagePath="RELEASE-COMPLIANCE.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\licenses\**\*" Link="legal-ui\licenses\%(RecursiveDir)%(Filename)%(Extension)" Pack="true" PackagePath="licenses\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

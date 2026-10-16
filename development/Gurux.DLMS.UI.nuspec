@@ -1,23 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modified for the Intelmeter fork, 2026-10-16: fork attribution and license packaging. GPL-2.0-only. -->
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
-        <id>Gurux.DLMS.UI</id>
+        <id>Intelmeter.Gurux.DLMS.UI</id>
         <version>$version$</version>
-        <title>Gurux.DLMS.UI</title>
-        <authors>Gurux Ltd</authors>
-        <owners>Gurux Ltd</owners>
-        <licenseUrl>http://www.gnu.org/licenses/gpl-2.0.txt</licenseUrl>
-        <projectUrl>http://www.gurux.org/index.php?q=GXDLMSCOSEM</projectUrl>
+        <title>Intelmeter fork of Gurux.DLMS.UI</title>
+        <authors>Gurux Ltd; Intelmeter fork contributors</authors>
+        <owners>Intelmeter</owners>
+        <license type="expression">GPL-2.0-only</license>
+        <projectUrl>https://github.com/intelmeter/Gurux.DLMS.UI.Net</projectUrl>
         <iconUrl>http://www.gurux.org/gurux.ico</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <description>Purpose of Gurux.DLMS.UI is help to create user interface for DLMS applications.</description>
+        <description>Unofficial Intelmeter .NET 10 fork of the Gurux DLMS user interface library. Not endorsed by Gurux.</description>
         <summary>Purpose of Gurux.DLMS.UI is help to create user interface for DLMS applications.</summary>
         <copyright>Copyright (c) 1998-2017 Gurux Ltd. All rights reserved.</copyright>
         <language>en-US</language>
         <tags>DLMS COSEM UI</tags>
     </metadata>
     <files>
-        <file src="bin\Release\Gurux.DLMS.UI.dll" target="lib\portable-win+net40" />
-        <file src="bin\Release\Gurux.DLMS.UI.pdb" target="lib\portable-win+net40" />
+        <file src="bin\Release\net10.0-windows\Gurux.DLMS.UI.dll" target="lib\net10.0-windows" />
+        <file src="bin\Release\net10.0-windows\Gurux.DLMS.UI.pdb" target="lib\net10.0-windows" />
+        <file src="..\LICENSE" target="" />
+        <file src="..\THIRD-PARTY-NOTICES.txt" target="" />
+        <file src="..\licenses\**\*" target="licenses" />
+        <file src="..\RELEASE-COMPLIANCE.txt" target="" />
      </files>
 </package>

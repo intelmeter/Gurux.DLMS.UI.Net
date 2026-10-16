@@ -252,3 +252,6 @@ paket-files/
 .idea/
 *.sln.iml
 *.zip
+
+# Legacy vendored protocol binary; use the pinned NuGet package.
+/development/Gurux.DLMS.dll

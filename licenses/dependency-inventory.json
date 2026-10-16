@@ -1,0 +1,14 @@
+[
+{
+  "id": "Gurux.DLMS",
+  "version": "9.0.2609.2201",
+  "license": "GPL-2.0-only",
+  "copyright": "Copyright (c) 1998-2026 Gurux Ltd. All rights reserved.",
+  "repository": "https://github.com/gurux/gurux.dlms.net",
+  "commit": "6f263019caab62eb038dad7b1fa130edc7097081",
+  "nugetSha512": "j3qBGmP+/QvMMDDeRvz0IeEHYOsPSNlKn7QHC+4WJ1F7dWD/pqMLYlSow9Jnp4ylpxZ9FDVM6Lt0SSq+/GyiXA==",
+  "noticeFiles": [
+    "LICENSE.txt"
+  ]
+}
+]
