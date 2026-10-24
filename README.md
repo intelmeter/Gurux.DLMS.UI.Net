@@ -1,25 +1,45 @@
-# Intelmeter fork of Gurux.DLMS.UI.Net
+# Gurux.DLMS.UI.Net — superintelligentmeter fork
 
-This is an unofficial community fork, maintained under the Intelmeter GitHub account. It is not an official Gurux release and does not imply Gurux endorsement. Original Gurux attribution is retained below.
+An unofficial community fork of [Gurux.DLMS.UI.Net](https://github.com/Gurux/Gurux.DLMS.UI.Net), maintained by [superintelligentmeter](https://github.com/superintelligentmeter). This repository provides the Windows Forms COSEM object views and shared UI components used by the companion [GXDLMSDirector fork](https://github.com/superintelligentmeter/GXDLMSDirector).
+
+This is **not an official Gurux release** and does not imply Gurux endorsement. Original Gurux UI components and the DLMS/COSEM libraries are developed by Gurux Ltd; their copyright, attribution and license notices remain applicable.
 
 License: **GPL-2.0-only**. The fork's contributions are distributed under the same license; original Gurux and third-party notices remain applicable. See [LICENSE](LICENSE), [MODIFICATIONS.txt](MODIFICATIONS.txt), [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt), and [RELEASE-COMPLIANCE.txt](RELEASE-COMPLIANCE.txt).
 
-Build on Windows with the .NET 10 SDK. Clone both Intelmeter repositories into sibling directories named GXDLMSDirector and Gurux.DLMS.UI.Net, then run from their parent directory:
+## Companion application preview
 
-    dotnet build GXDLMSDirector/Development/GXDLMSDirector46.csproj -c Release -t:Rebuild
+![GXDLMSDirector companion application with multi-meter measurement tiles and a voltage trend](ui.png)
+
+*Development preview of the GXDLMSDirector companion application, built from the local working versions of the paired forks, showing simulated readings. No physical meters are connected. The dashboard source changes have not yet been published. The dashboard module belongs to Director; this UI library is not a separate dashboard application.*
+
+## Build with GXDLMSDirector
+
+Install the **.NET 10 SDK** on Windows, then clone the two forks into sibling directories:
+
+```powershell
+git clone https://github.com/superintelligentmeter/GXDLMSDirector.git
+git clone https://github.com/superintelligentmeter/Gurux.DLMS.UI.Net.git
+dotnet build GXDLMSDirector/Development/GXDLMSDirector46.csproj -c Release -t:Rebuild
+```
+
+Keep the directory names `GXDLMSDirector` and `Gurux.DLMS.UI.Net`; Director references this project. See the [Director README](https://github.com/superintelligentmeter/GXDLMSDirector#readme) for the dashboard development preview. The commands above build the currently published source.
 
 The protocol library remains the official Gurux.DLMS 9.0.2609.2201 NuGet package. This GPL dependency is not exempt from redistribution obligations merely because it is unmodified.
 
----
+## Original Gurux resources and attribution
 
-See An [Gurux](http://www.gurux.org/ "Gurux") for an overview.
+Gurux provides the original DLMS/COSEM components and object-view framework. The components support compatible electricity, gas and water meters; the UI library supplies views for displaying and editing COSEM objects.
 
-Join the Gurux Community or follow [@Gurux](https://twitter.com/guruxorg "@Gurux") for project updates.
+- [Original Gurux.DLMS.UI.Net repository](https://github.com/Gurux/Gurux.DLMS.UI.Net)
+- [Original GXDLMSDirector repository](https://github.com/Gurux/GXDLMSDirector)
+- [Gurux website](https://www.gurux.fi/) and [Gurux.DLMS documentation](https://www.gurux.fi/index.php?q=Gurux.DLMS)
+- [Gurux community updates](https://twitter.com/guruxorg)
 
-Gurux.DLMS library is a high-performance .NET component that helps you to read you DLMS/COSEM compatible electricity, gas or water meters. We have try to make component so easy to use that you do not need understand protocol at all.
+Preserve the original Gurux and third-party notices. See [MODIFICATIONS.txt](MODIFICATIONS.txt) for fork changes and [RELEASE-COMPLIANCE.txt](RELEASE-COMPLIANCE.txt) before distributing binaries, including unchanged GPL dependency DLLs.
 
-For more info check out [Gurux.DLMS](http://www.gurux.fi/index.php?q=Gurux.DLMS "Gurux.DLMS").
+## Original Gurux UI integration example
 
+The following upstream usage example is retained for reference.
 
 Gurux.DLMS.UI
 =========================== 
